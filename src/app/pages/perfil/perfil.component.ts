@@ -39,7 +39,7 @@ export class PerfilComponent implements OnInit {
     public ngbModal: NgbModal,
     public db: AngularFireDatabase,
   ) {
-    this.fs.doc<Usuario>(`/AC Celulares/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).snapshotChanges()
+    this.fs.doc<Usuario>(`/ACR Motos/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).snapshotChanges()
       .subscribe((usuario: Action<DocumentSnapshot<Usuario>>) => {
         this.photoURL = usuario.payload.data().PhotoURL;
         this.Nombre = usuario.payload.data()['Primer Nombre'] + ' ' + usuario.payload.data()['Primer Apellido'];
@@ -72,12 +72,12 @@ export class PerfilComponent implements OnInit {
       this.servicio.newToast(0, 'Deben ser las mismas contraseñas', 'Ambas contraseñas deben de coincidir y ser las mismas');
     } else {
       usuario.updatePassword(this.contrasena).then(resp => {
-        this.fs.doc<Usuario>(`/AC Celulares/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).update({
+        this.fs.doc<Usuario>(`/ACR Motos/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).update({
           Contrasena: this.contrasena
         }).then(rep => {
           let id = this.servicio.auth.auth.currentUser.email;
           id = id.replace('.', '_');
-          this.db.database.ref(`/AC Celulares/Control/Usuarios/${id}`).update({
+          this.db.database.ref(`/ACR Motos/Control/Usuarios/${id}`).update({
             Contrasena: this.contrasena
           });
         }).catch(err => {

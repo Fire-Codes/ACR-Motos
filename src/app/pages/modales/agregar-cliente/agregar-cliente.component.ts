@@ -73,7 +73,7 @@ export class AgregarClienteComponent implements OnInit {
     public servicio: ServicioService,
     public db: AngularFireDatabase
   ) {
-    this.fs.doc('AC Celulares/Control').snapshotChanges().subscribe((controles: Action<DocumentSnapshot<ControlTienda>>) => {
+    this.fs.doc('ACR Motos/Control').snapshotChanges().subscribe((controles: Action<DocumentSnapshot<ControlTienda>>) => {
       this.cantidadClientes = controles.payload.data()['Cantidad de Clientes'];
       this.departamentosMunicipios = controles.payload.data()['Departamentos y Municipios'];
     });
@@ -93,7 +93,7 @@ export class AgregarClienteComponent implements OnInit {
     } else {
 
       // condicional que verifica que el cliente que se va a agregar no coincida con los datos de otro ya agregado a la base de datos
-      this.fs.collection('AC Celulares/Control/Clientes').snapshotChanges().subscribe((documentos: DocumentChangeAction<Cliente>[]) => {
+      this.fs.collection('ACR Motos/Control/Clientes').snapshotChanges().subscribe((documentos: DocumentChangeAction<Cliente>[]) => {
         documentos.map((documento: DocumentChangeAction<Cliente>) => {
           if (documento.payload.doc.data().Cedula === this.cedula) {
             this.servicio.newToast(0, 'Error de Insercción', 'Ya hay otro cliente registrado con este numero de Cédula.');
@@ -122,7 +122,7 @@ export class AgregarClienteComponent implements OnInit {
         } else {
           // console.warn('No hubieron errores en la verificacion');
           // funcion que se ejecuta a un dado caso que el contador de errores sea igual  0
-          this.fs.doc<Cliente>(`AC Celulares/Control/Clientes/${this.nombreCompleto}`).set({
+          this.fs.doc<Cliente>(`ACR Motos/Control/Clientes/${this.nombreCompleto}`).set({
             Id: this.nombreCompleto,
             'Primer Nombre': this.primerNombre,
             'Primer Apellido': this.primerApellido,
@@ -145,7 +145,7 @@ export class AgregarClienteComponent implements OnInit {
             CantidadReservas: 0
           }).then((resp) => {
             this.servicio.newToast(1, 'Insercción Correcta', `El Cliente ${this.nombreCompleto} se agregó al sistema correctamente`);
-            this.fs.doc<ControlTienda>('AC Celulares/Control').update({
+            this.fs.doc<ControlTienda>('ACR Motos/Control').update({
               'Cantidad de Clientes': this.cantidadClientes + 1,
               'Contador de Clientes': this.cantidadClientes + 1
             });
@@ -154,7 +154,7 @@ export class AgregarClienteComponent implements OnInit {
           });
 
           // integracion con el realtime database
-          this.db.database.ref(`AC Celulares/Control/Clientes/${this.nombreCompleto}`).set({
+          this.db.database.ref(`ACR Motos/Control/Clientes/${this.nombreCompleto}`).set({
             Id: this.nombreCompleto,
             'Primer Nombre': this.primerNombre,
             'Primer Apellido': this.primerApellido,
@@ -175,7 +175,7 @@ export class AgregarClienteComponent implements OnInit {
             Nombres: this.primerNombre + ' ' + this.segundoNombre,
             'Cantidad de Compras': 0
           }).then((resp) => {
-            this.db.database.ref('AC Celulares/Control').update({
+            this.db.database.ref('ACR Motos/Control').update({
               'Cantidad de Clientes': this.cantidadClientes + 1,
               'Contador de Clientes': this.cantidadClientes + 1
             });

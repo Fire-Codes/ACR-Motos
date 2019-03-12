@@ -166,20 +166,20 @@ export class ReservarProductoComponent implements OnInit {
     } else {
 
       // se leen los productos reservados actuales del cliente y la cantidad en existencia del producto
-      this.fs.doc<Cliente>(`AC Celulares/Control/Clientes/${this.valordebusquedaCliente}`).snapshotChanges()
+      this.fs.doc<Cliente>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}`).snapshotChanges()
         .subscribe(clienteDoc => {
           cantidadReservas = clienteDoc.payload.data().CantidadReservas;
           cliente = clienteDoc.payload.data();
         });
 
       // se guarda toda la informacion del usuario que lo vendio
-      this.fs.doc<Usuario>(`AC Celulares/Control/Usuarios/${this.valordebusquedaVendedor}`).snapshotChanges()
+      this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`).snapshotChanges()
         .subscribe(usuario => {
           vendedor = usuario.payload.data();
         });
 
       // se guardan las existencias del producto seleccionado para su posterior update
-      this.fs.doc<Producto>(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).snapshotChanges()
+      this.fs.doc<Producto>(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).snapshotChanges()
         .subscribe(producto => {
           existenciasProducto = producto.payload.data().Existencia;
         });
@@ -188,7 +188,7 @@ export class ReservarProductoComponent implements OnInit {
       setTimeout(() => {
         // se guardan primero los datos en el control de reservaciones para posteriormente guardarlos en el historial de cada cliente
         // tslint:disable-next-line:max-line-length
-        this.fs.doc<ProductoReservado>(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
+        this.fs.doc<ProductoReservado>(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
           Cliente: cliente,
           Vendedor: vendedor,
           Producto: this.producto,
@@ -209,7 +209,7 @@ export class ReservarProductoComponent implements OnInit {
           Id: `${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`
         }).then(respons => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
+          this.db.database.ref(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
             Cliente: cliente,
             Vendedor: vendedor,
             Producto: this.producto,
@@ -230,7 +230,7 @@ export class ReservarProductoComponent implements OnInit {
             Id: `${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`
           }).then(re => {
             // tslint:disable-next-line:max-line-length
-            this.fs.doc<ProductoReservado>(`AC Celulares/Control/Clientes/${this.valordebusquedaCliente}/Historial de Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`)
+            this.fs.doc<ProductoReservado>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}/Historial de Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`)
               .set({
                 Cliente: cliente,
                 Vendedor: vendedor,
@@ -251,14 +251,14 @@ export class ReservarProductoComponent implements OnInit {
                 // tslint:disable-next-line:max-line-length
                 Id: `${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`
               }).then((res) => {
-                this.fs.doc<Producto>(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).update({
+                this.fs.doc<Producto>(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).update({
                   Existencia: existenciasProducto - 1
                 });
-                this.fs.doc<Cliente>(`AC Celulares/Control/Clientes/${this.valordebusquedaCliente}`).update({
+                this.fs.doc<Cliente>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}`).update({
                   CantidadReservas: cantidadReservas + 1
                 }).then(respo => {
                   // tslint:disable-next-line:max-line-length
-                  this.db.database.ref(`AC Celulares/Control/Clientes/${this.valordebusquedaCliente}/Historial de Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`)
+                  this.db.database.ref(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}/Historial de Reservas/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`)
                     .set({
                       Cliente: cliente,
                       Vendedor: vendedor,
@@ -279,10 +279,10 @@ export class ReservarProductoComponent implements OnInit {
                       // tslint:disable-next-line:max-line-length
                       Id: `${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`
                     }).then(resp => {
-                      this.db.database.ref(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).update({
+                      this.db.database.ref(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).update({
                         Existencia: existenciasProducto - 1
                       }).then(response => {
-                        this.db.database.ref(`AC Celulares/Control/Clientes/${this.valordebusquedaCliente}`).update({
+                        this.db.database.ref(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}`).update({
                           CantidadReservas: cantidadReservas + 1
                         }).then(respon => {
                           // tslint:disable-next-line:max-line-length
@@ -335,7 +335,7 @@ export class ReservarProductoComponent implements OnInit {
   buscarClientes() {
     // tslint:disable-next-line:prefer-const
     let self = this;
-    self.clientes = self.fs.collection<Cliente>('AC Celulares/Control/Clientes', ref => ref
+    self.clientes = self.fs.collection<Cliente>('ACR Motos/Control/Clientes', ref => ref
       .orderBy('NombreCompleto')
       .startAt(self.valordebusquedaCliente.toUpperCase())
       .endAt(self.valordebusquedaCliente.toUpperCase() + '\uf8ff')
@@ -347,7 +347,7 @@ export class ReservarProductoComponent implements OnInit {
   buscarVendedor() {
     // tslint:disable-next-line:prefer-const
     let self = this;
-    self.vendedores = self.fs.collection<Usuario>('AC Celulares/Control/Usuarios', ref => ref
+    self.vendedores = self.fs.collection<Usuario>('ACR Motos/Control/Usuarios', ref => ref
       .orderBy('Nombres')
       .startAt(self.valordebusquedaVendedor.toUpperCase())
       .endAt(self.valordebusquedaVendedor.toUpperCase() + '\uf8ff')

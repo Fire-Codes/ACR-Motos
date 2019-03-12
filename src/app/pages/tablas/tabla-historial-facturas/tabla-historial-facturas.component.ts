@@ -47,7 +47,7 @@ export class TablaHistorialFacturasComponent implements OnInit {
     public db: AngularFireDatabase
   ) {
     // Se extraen todos los productos ingresados
-    this.coleccionFacturas = this.fs.collection<Factura>(`/AC Celulares/Control/Facturas/${this.servicio.tienda}/Historial de Facturas`);
+    this.coleccionFacturas = this.fs.collection<Factura>(`/ACR Motos/Control/Facturas/${this.servicio.tienda}/Historial de Facturas`);
     this.coleccionFacturas.valueChanges().subscribe(factura => {
       // Assign the data to the data source for the table to render
       this.dataSource = new MatTableDataSource(factura);

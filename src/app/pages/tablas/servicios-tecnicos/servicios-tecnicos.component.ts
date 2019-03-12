@@ -118,7 +118,7 @@ export class ServiciosTecnicosComponent implements OnInit {
     public servicio: ServicioService,
     public db: AngularFireDatabase
   ) {
-    this.fs.doc<ControlTienda>('/AC Celulares/Control').snapshotChanges().subscribe(control => {
+    this.fs.doc<ControlTienda>('/ACR Motos/Control').snapshotChanges().subscribe(control => {
       this.cantidadServicios = control.payload.data()['Cantidad Total de Servicios'];
       this.reiniciarId();
     });
@@ -127,7 +127,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
     // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente para las ventas
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
       .snapshotChanges().subscribe(semana => {
         this.datosVentasSemanaFirestore = semana.payload.data();
         this.datosVentasSemanaLocal = this.datosVentasSemanaFirestore;
@@ -135,7 +135,7 @@ export class ServiciosTecnicosComponent implements OnInit {
       });
 
     // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente para las ventas
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
       .snapshotChanges().subscribe(anuales => {
         this.datosVentasAnualFirestore = anuales.payload.data();
         this.datosVentasAnualesLocal = this.datosVentasAnualFirestore;
@@ -144,7 +144,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
     // se extraen los datos de firestore del dia actual para mostrar en los graficos diarios correctamente para las ventas
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+    this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
       .snapshotChanges().subscribe(diario => {
         this.datosVentasDiarioFirestore = diario.payload.data();
         this.datosVentasDiarioLocal = this.datosVentasDiarioFirestore.Datos;
@@ -153,7 +153,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
     // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente para las ganancias
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
       .snapshotChanges().subscribe(semana => {
         this.datosGananciasSemanaFirestore = semana.payload.data();
         this.datosGananciasSemanaLocal = this.datosGananciasSemanaFirestore;
@@ -161,7 +161,7 @@ export class ServiciosTecnicosComponent implements OnInit {
       });
 
     // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente para las ganancias
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
       .snapshotChanges().subscribe(anuales => {
         this.datosGananciasAnualFirestore = anuales.payload.data();
         this.datosGananciasAnualesLocal = this.datosGananciasAnualFirestore;
@@ -170,7 +170,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
     // se extraen los datos de firestore del dia actual para mostrar en los graficos diarios correctamente para las ganancias
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+    this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
       .snapshotChanges().subscribe(diario => {
         this.datosGananciasDiarioFirestore = diario.payload.data();
         this.datosGananciasDiarioLocal = this.datosGananciasDiarioFirestore.Datos;
@@ -179,7 +179,7 @@ export class ServiciosTecnicosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.coleccionDeServicios = this.fs.collection<Servicio>('AC Celulares/Control/Servicios');
+    this.coleccionDeServicios = this.fs.collection<Servicio>('ACR Motos/Control/Servicios');
     this.coleccionDeServicios.valueChanges().subscribe(servicio => {
       // Assign the data to the data source for the table to render
       this.dataSource = new MatTableDataSource(servicio);
@@ -202,17 +202,17 @@ export class ServiciosTecnicosComponent implements OnInit {
 
   // funcion para agregar un nuevo servicio
   agregarServicios() {
-    this.fs.doc<Servicio>(`/AC Celulares/Control/Servicios/${this.idServicio}`).set({
+    this.fs.doc<Servicio>(`/ACR Motos/Control/Servicios/${this.idServicio}`).set({
       Id: this.idServicio,
       TipoServicio: this.tipoServicio,
       Nombre: this.nombreServicio
     }).then(resp => {
-      this.db.database.ref(`/AC Celulares/Control/Servicios/${this.idServicio}`).set({
+      this.db.database.ref(`/ACR Motos/Control/Servicios/${this.idServicio}`).set({
         Id: this.idServicio,
         TipoServicio: this.tipoServicio,
         Nombre: this.nombreServicio
       }).then(res => {
-        this.fs.doc<ControlTienda>('AC Celulares/Control').update({
+        this.fs.doc<ControlTienda>('ACR Motos/Control').update({
           'Cantidad Total de Servicios': this.cantidadServicios + 1
         });
         this.servicio.newToast(1, 'Servicio Agregado', 'El servicio se ha agregado correctamente');
@@ -224,14 +224,14 @@ export class ServiciosTecnicosComponent implements OnInit {
   venderServicios() {
     let cliente: Cliente;
     let vendedor: Usuario;
-    this.fs.doc<Usuario>(`AC Celulares/Control/Usuarios/${this.valordebusquedaVendedor}`)
+    this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`)
       .snapshotChanges().subscribe(vendedores => vendedor = vendedores.payload.data());
-    this.fs.doc<Cliente>(`AC Celulares/Control/Clientes/${this.valordebusquedaCliente}`)
+    this.fs.doc<Cliente>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}`)
       .snapshotChanges().subscribe(clientes => cliente = clientes.payload.data());
     const tiempo = new Date();
     setTimeout(() => {
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<HistorialServicio>(`AC Celulares/Control/Historial de Ventas de Servicios/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}, ${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
+      this.fs.doc<HistorialServicio>(`ACR Motos/Control/Historial de Ventas de Servicios/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}, ${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
         Servicio: this.servicioVender,
         Vendedor: vendedor,
         Cliente: cliente,
@@ -245,7 +245,7 @@ export class ServiciosTecnicosComponent implements OnInit {
         // tslint:disable-next-line:max-line-length
         this.servicio.newToast(1, 'Servicio Vendido', `Servicio ${this.idServicio} vendido al cliente ${this.valordebusquedaCliente} correctamente!`);
         if (this.servicioVender.TipoServicio === 'Software') {
-          this.fs.doc<Usuario>(`AC Celulares/Control/Usuarios/${this.valordebusquedaVendedor}`).update({
+          this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`).update({
             Flasheos: vendedor.Flasheos + 1,
             TotalAcumulado: vendedor.TotalAcumulado + ((this.precioFinal * 20) / 100)
           });
@@ -273,38 +273,38 @@ export class ServiciosTecnicosComponent implements OnInit {
           this.totalVentasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
             .update({
               Datos: this.datosVentasDiarioLocal,
               TotalVentas: this.totalVentasDia
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
                 .update({
                   Datos: this.datosVentasDiarioLocal,
                   TotalVentas: this.totalVentasDia
                 });
             });
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
             .update({
               TotalVentas: this.totalVentasSemana,
               Servicio: this.datosVentasSemanaLocal.Servicio
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
                 .update({
                   TotalVentas: this.totalVentasSemana,
                   Servicio: this.datosVentasSemanaLocal.Servicio
                 });
             });
 
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
             .update({
               Servicio: this.datosVentasAnualesLocal.Servicio,
               TotalVentas: this.totalVentasAnual
             }).then(resp => {
-              this.db.database.ref(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
                 .update({
                   Servicio: this.datosVentasAnualesLocal.Servicio,
                   TotalVentas: this.totalVentasAnual
@@ -312,13 +312,13 @@ export class ServiciosTecnicosComponent implements OnInit {
             });
 
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
             .update({
               Datos: this.datosGananciasDiarioLocal,
               TotalVentas: this.totalGananciasDia
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
                 .update({
                   Datos: this.datosGananciasDiarioLocal,
                   TotalVentas: this.totalGananciasDia
@@ -327,13 +327,13 @@ export class ServiciosTecnicosComponent implements OnInit {
 
           // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
             .update({
               TotalVentas: this.totalGananciasSemana,
               Servicio: this.datosGananciasSemanaLocal.Servicio
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
                 .update({
                   TotalVentas: this.totalGananciasSemana,
                   Servicio: this.datosGananciasSemanaLocal.Servicio
@@ -341,19 +341,19 @@ export class ServiciosTecnicosComponent implements OnInit {
             });
 
           // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
             .update({
               Servicio: this.datosGananciasAnualesLocal.Servicio,
               TotalVentas: this.totalGananciasAnual
             }).then(resp => {
-              this.db.database.ref(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
                 .update({
                   Servicio: this.datosGananciasAnualesLocal.Servicio,
                   TotalVentas: this.totalGananciasAnual
                 });
             });
         } else {
-          this.fs.doc<Usuario>(`AC Celulares/Control/Usuarios/${this.valordebusquedaVendedor}`).update({
+          this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`).update({
             Reparaciones: vendedor.Reparaciones + 1,
             TotalAcumulado: vendedor.TotalAcumulado + ((this.precioFinal * 50) / 100)
           });
@@ -383,38 +383,38 @@ export class ServiciosTecnicosComponent implements OnInit {
           this.totalVentasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
             .update({
               Datos: this.datosVentasDiarioLocal,
               TotalVentas: this.totalVentasDia
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
                 .update({
                   Datos: this.datosVentasDiarioLocal,
                   TotalVentas: this.totalVentasDia
                 });
             });
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
             .update({
               TotalVentas: this.totalVentasSemana,
               Servicio: this.datosVentasSemanaLocal.Servicio
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
                 .update({
                   TotalVentas: this.totalVentasSemana,
                   Servicio: this.datosVentasSemanaLocal.Servicio
                 });
             });
 
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
             .update({
               Servicio: this.datosVentasAnualesLocal.Servicio,
               TotalVentas: this.totalVentasAnual
             }).then(resp => {
-              this.db.database.ref(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
                 .update({
                   Servicio: this.datosVentasAnualesLocal.Servicio,
                   TotalVentas: this.totalVentasAnual
@@ -422,13 +422,13 @@ export class ServiciosTecnicosComponent implements OnInit {
             });
 
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
             .update({
               Datos: this.datosGananciasDiarioLocal,
               TotalVentas: this.totalGananciasDia
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
                 .update({
                   Datos: this.datosGananciasDiarioLocal,
                   TotalVentas: this.totalGananciasDia
@@ -437,13 +437,13 @@ export class ServiciosTecnicosComponent implements OnInit {
 
           // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
             .update({
               TotalVentas: this.totalGananciasSemana,
               Servicio: this.datosGananciasSemanaLocal.Servicio
             }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
                 .update({
                   TotalVentas: this.totalGananciasSemana,
                   Servicio: this.datosGananciasSemanaLocal.Servicio
@@ -451,12 +451,12 @@ export class ServiciosTecnicosComponent implements OnInit {
             });
 
           // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente
-          this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
             .update({
               Servicio: this.datosGananciasAnualesLocal.Servicio,
               TotalVentas: this.totalGananciasAnual
             }).then(resp => {
-              this.db.database.ref(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
                 .update({
                   Servicio: this.datosGananciasAnualesLocal.Servicio,
                   TotalVentas: this.totalGananciasAnual
@@ -470,7 +470,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
   // funcion para eliminar el servicio
   eliminarServicio() {
-    this.fs.doc(`/AC Celulares/Control/Servicios/${this.servicioVender.Id}`).delete().then(res => {
+    this.fs.doc(`/ACR Motos/Control/Servicios/${this.servicioVender.Id}`).delete().then(res => {
       this.servicio.newToast(1, 'Servicio Eliminado', `El servicio ${this.servicioVender.Id} se ha eliminado correctamente`);
     }).catch(err => {
       this.servicio.newToast(0, 'Hubo un Error!', err);
@@ -506,7 +506,7 @@ export class ServiciosTecnicosComponent implements OnInit {
   buscarVendedor() {
     // tslint:disable-next-line:prefer-const
     let self = this;
-    self.vendedores = self.fs.collection<Usuario>('AC Celulares/Control/Usuarios', ref => ref
+    self.vendedores = self.fs.collection<Usuario>('ACR Motos/Control/Usuarios', ref => ref
       .orderBy('Nombres')
       .startAt(self.valordebusquedaVendedor.toUpperCase())
       .endAt(self.valordebusquedaVendedor.toUpperCase() + '\uf8ff')
@@ -518,7 +518,7 @@ export class ServiciosTecnicosComponent implements OnInit {
   buscarClientes() {
     // tslint:disable-next-line:prefer-const
     let self = this;
-    self.clientes = self.fs.collection<Cliente>('AC Celulares/Control/Clientes', ref => ref
+    self.clientes = self.fs.collection<Cliente>('ACR Motos/Control/Clientes', ref => ref
       .orderBy('NombreCompleto')
       .startAt(self.valordebusquedaCliente.toUpperCase())
       .endAt(self.valordebusquedaCliente.toUpperCase() + '\uf8ff')

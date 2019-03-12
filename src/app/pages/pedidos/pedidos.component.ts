@@ -57,7 +57,7 @@ export class PedidosComponent implements OnInit {
   applyFilter() {
     this.dataSource.data = [];
     // Se extraen todos los productos ingresados
-    this.coleccionDeProductos = this.fs.collection<Producto>(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos`);
+    this.coleccionDeProductos = this.fs.collection<Producto>(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos`);
     this.coleccionDeProductos.ref.where('Existencia', '<=', parseFloat(this.valorBusqueda)).get().then(documentos => {
       // Assign the data to the data source for the table to render
       documentos.docs.forEach((dato: QueryDocumentSnapshot<Producto>) => {

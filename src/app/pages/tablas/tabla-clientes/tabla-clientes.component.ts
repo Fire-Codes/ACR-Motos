@@ -57,14 +57,14 @@ export class TablaClientesComponent implements OnInit {
   ) {
 
     // se extrae la cantidad total de clientes almacenados
-    this.fs.doc('AC Celulares/Control').snapshotChanges()
+    this.fs.doc('ACR Motos/Control').snapshotChanges()
       .subscribe((control: Action<DocumentSnapshot<ControlTienda>>) => {
         this.contadorClientes = control.payload.data()['Contador de Clientes'];
         // console.log('Cantidad de Clientes almacenados actualmente: ' + this.contadorClientes);
       });
 
     // se extraen todos los clientes ingresados para guardarlos en la variable que contendra los clientes en la tabla
-    this.coleccionDeClientes = this.fs.collection<Cliente>('AC Celulares/Control/Clientes');
+    this.coleccionDeClientes = this.fs.collection<Cliente>('ACR Motos/Control/Clientes');
     this.coleccionDeClientes.valueChanges().subscribe(cliente => {
       // se le asignan los datos a la variable de los datos de la tabla de clientes cada vez que haya un cambio
       this.dataSource = new MatTableDataSource(cliente);
@@ -119,12 +119,12 @@ export class TablaClientesComponent implements OnInit {
   // funcion para eliminar el cliente
   eliminarClientes() {
     const contadorClientes = this.contadorClientes - 1;
-    this.fs.doc(`AC Celulares/Control/Clientes/${this.cliente.Id}`).delete().then(res => {
+    this.fs.doc(`ACR Motos/Control/Clientes/${this.cliente.Id}`).delete().then(res => {
       this.servicio.newToast(1, 'Eliminación de cliente correcta', 'El cliente se ha eliminado correctamente');
-      this.db.database.ref(`AC Celulares/Control/Clientes/${this.cliente.Id}`).remove();
+      this.db.database.ref(`ACR Motos/Control/Clientes/${this.cliente.Id}`).remove();
       // tslint:disable-next-line:max-line-length
-      this.db.database.ref('AC Celulares/Control').update({ 'Cantidad de Clientes': contadorClientes, 'Contador de Clientes': contadorClientes });
-      this.fs.doc('AC Celulares/Control').update({ 'Cantidad de Clientes': contadorClientes, 'Contador de Clientes': contadorClientes });
+      this.db.database.ref('ACR Motos/Control').update({ 'Cantidad de Clientes': contadorClientes, 'Contador de Clientes': contadorClientes });
+      this.fs.doc('ACR Motos/Control').update({ 'Cantidad de Clientes': contadorClientes, 'Contador de Clientes': contadorClientes });
     }).catch(err => {
       this.servicio.newToast(0, 'Eliminación de cliente incorrecta', err);
     });
@@ -132,7 +132,7 @@ export class TablaClientesComponent implements OnInit {
 
   // funcion para editar los datos de un cliente
   editarClientes() {
-    this.fs.doc(`AC Celulares/Control/Clientes/${this.cliente.Id}`).update(this.cliente)
+    this.fs.doc(`ACR Motos/Control/Clientes/${this.cliente.Id}`).update(this.cliente)
       .then(response => {
         this.servicio.newToast(1, 'Modificacion Correcta', `El Cliente ${this.cliente.Id} se ha modificado con éxito`);
       }).catch(err => {
@@ -140,7 +140,7 @@ export class TablaClientesComponent implements OnInit {
       });
 
     // integracion con el realtime database
-    this.db.database.ref(`AC Celulares/Control/Clientes/${this.cliente.Id}`).update(this.cliente);
+    this.db.database.ref(`ACR Motos/Control/Clientes/${this.cliente.Id}`).update(this.cliente);
   }
 
   // funcion para hacer mayusculas el texto ingresado

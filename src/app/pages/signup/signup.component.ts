@@ -48,7 +48,7 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     // se extrae la cantidad total de usuarios actualmente
-    this.fs.doc<ControlTienda>('AC Celulares/Control').snapshotChanges().subscribe(control => {
+    this.fs.doc<ControlTienda>('ACR Motos/Control').snapshotChanges().subscribe(control => {
       this.totalUsuarios = control.payload.data()['Cantidad Total de Usuarios'];
     });
   }
@@ -58,7 +58,7 @@ export class SignupComponent implements OnInit {
     // console.log('Registrando Usuario');
     this.servicio.crearUsuario(this.correo, this.contrasena).then(() => {
       this.servicio.newToast(1, 'Usuario Agregado!', `El Usuario ${this.username} ha sido agregado correctamente.`);
-      this.fs.doc<Usuario>(`AC Celulares/Control/Usuarios/${this.correo}`).set({
+      this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.correo}`).set({
         Nombres: this.primerNombre + ' ' + this.segundoNombre,
         Apellidos: this.primerApellido + ' ' + this.segundoApellido,
         Correo: this.correo,
@@ -88,8 +88,8 @@ export class SignupComponent implements OnInit {
       }).then(res => {
         const totalUsuarios = this.totalUsuarios + 1;
         // console.warn('Datos del usuario agregados a firestore correctamente');
-        this.fs.doc<ControlTienda>('AC Celulares/Control').update({ 'Cantidad Total de Usuarios': totalUsuarios }).then(resp => {
-          this.db.database.ref('AC Celulares/Control').update({ 'Cantidad Total de Usuarios': totalUsuarios });
+        this.fs.doc<ControlTienda>('ACR Motos/Control').update({ 'Cantidad Total de Usuarios': totalUsuarios }).then(resp => {
+          this.db.database.ref('ACR Motos/Control').update({ 'Cantidad Total de Usuarios': totalUsuarios });
         });
         this.reiniciarInputs();
       }).catch(err => {
@@ -99,7 +99,7 @@ export class SignupComponent implements OnInit {
       // integracion con el realtime database
       let id = this.correo;
       id = id.replace('.', '_');
-      this.db.database.ref(`AC Celulares/Control/Usuarios/${id}`).set({
+      this.db.database.ref(`ACR Motos/Control/Usuarios/${id}`).set({
         Nombres: this.primerNombre + ' ' + this.segundoNombre,
         Apellidos: this.primerApellido + ' ' + this.segundoApellido,
         Correo: this.correo,

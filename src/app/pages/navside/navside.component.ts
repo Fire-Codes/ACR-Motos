@@ -88,13 +88,13 @@ export class NavsideComponent implements OnInit {
     const segundos = tiempo.getSeconds();
     const email = this.servicio.auth.auth.currentUser.email;
     let nombre;
-    this.fs.doc(`AC Celulares/Control/Usuarios/${email}`).snapshotChanges()
+    this.fs.doc(`ACR Motos/Control/Usuarios/${email}`).snapshotChanges()
       .subscribe((user: Action<DocumentSnapshot<Usuario>>) => {
         nombre = user.payload.data()['Primer Nombre'] + ' ' + user.payload.data()['Primer Apellido'];
       });
     this.servicio.logout().then((res) => {
       // console.log('Se ha cerrado sesion correctamente');
-      this.fs.doc(`AC Celulares/Control/Usuarios/${email}`).update({
+      this.fs.doc(`ACR Motos/Control/Usuarios/${email}`).update({
         EstadoConexion: false,
         FechaUltimaConexion: `${dia}, ${mes} de ${ano}`,
         HoraUltimaConexion: `${hora}:${minutos}:${segundos}`

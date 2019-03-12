@@ -79,7 +79,7 @@ export class ServicioService {
   // funcion para extraer todos los usuarios de la base de datos
   public extraerUsuarios() {
     let Usuarioss: Usuario[];
-    this.Usuarios = this.fs.collection<Usuario>('AC Celulares/Control/Clientes');
+    this.Usuarios = this.fs.collection<Usuario>('ACR Motos/Control/Clientes');
     this.Usuarios.valueChanges().subscribe(usuario => {
       // Assign the data to the data source for the table to render
       Usuarioss = usuario;

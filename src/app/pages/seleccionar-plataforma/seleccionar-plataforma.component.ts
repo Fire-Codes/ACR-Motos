@@ -29,7 +29,7 @@ export class SeleccionarPlataformaComponent implements OnInit {
     public fs: AngularFirestore
   ) {
     this.nav.mostrarNav = false;
-    this.fs.doc(`AC Celulares/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).snapshotChanges()
+    this.fs.doc(`ACR Motos/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).snapshotChanges()
       .subscribe((usuario: Action<DocumentSnapshot<Usuario>>) => {
         this.tienda1 = usuario.payload.data().Pertenece1;
         this.tienda2 = usuario.payload.data().Pertenece2;

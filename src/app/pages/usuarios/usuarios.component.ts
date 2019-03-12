@@ -40,7 +40,7 @@ export class UsuariosComponent implements OnInit {
     public db: AngularFireDatabase
   ) {
     // Se extraen todos los productos ingresados
-    this.coleccionDeUsuarios = this.fs.collection<Usuario>(`/AC Celulares/Control/Usuarios`);
+    this.coleccionDeUsuarios = this.fs.collection<Usuario>(`/ACR Motos/Control/Usuarios`);
     this.coleccionDeUsuarios.valueChanges().subscribe(usuarios => {
       this.Usuarios = [];
       usuarios.forEach(usuario => {
@@ -67,7 +67,7 @@ export class UsuariosComponent implements OnInit {
 
   // funcion para pagarle al usuario
   pagarleUsuario(usuario: Usuario) {
-    this.fs.doc<Usuario>(`/AC Celulares/Control/Usuarios/${usuario.Correo}`).update({
+    this.fs.doc<Usuario>(`/ACR Motos/Control/Usuarios/${usuario.Correo}`).update({
       TotalAcumulado: 0,
       Ventas: 0,
       Flasheos: 0,

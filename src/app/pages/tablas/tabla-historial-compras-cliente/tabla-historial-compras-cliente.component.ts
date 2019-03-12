@@ -51,7 +51,7 @@ export class TablaHistorialComprasClienteComponent implements OnInit {
   ngOnInit() {
     // se extraen todos los clientes ingresados para guardarlos en la variable que contendra los clientes en la tabla
     // tslint:disable-next-line:max-line-length
-    this.coleccionDeComprascliente = this.fs.collection<HistorialCompra>(`AC Celulares/Control/Clientes/${this.cliente.Id}/Historial de Compras`);
+    this.coleccionDeComprascliente = this.fs.collection<HistorialCompra>(`ACR Motos/Control/Clientes/${this.cliente.Id}/Historial de Compras`);
     this.coleccionDeComprascliente.valueChanges().subscribe(compras => {
       // se le asignan los datos a la variable de los datos de la tabla de clientes cada vez que haya un cambio
       this.dataSource = new MatTableDataSource(compras);

@@ -45,13 +45,13 @@ export class LoginComponent implements OnInit {
   login() {
     this.servicio.login(this.email, this.password)
       .then((usuario) => {
-        this.fs.doc(`AC Celulares/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).update({
+        this.fs.doc(`ACR Motos/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).update({
           EstadoConexion: true,
           UID: this.servicio.auth.auth.currentUser.uid,
           'Contraseña': this.password
         }).then((response) => {
           // console.log('Datos Actualizados Correctamente');
-          this.fs.doc(`AC Celulares/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`)
+          this.fs.doc(`ACR Motos/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`)
             .snapshotChanges().subscribe((user: Action<DocumentSnapshot<Usuario>>) => {
               this.nav.nombre = user.payload.data()['Primer Nombre'] + ' ' + user.payload.data()['Primer Apellido'];
               this.nav.photoUrl = user.payload.data().PhotoURL;

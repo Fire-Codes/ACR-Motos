@@ -46,7 +46,7 @@ export class SistemaApartadoComponent implements OnInit {
   ) {
 
     // se extraen todos los clientes ingresados para guardarlos en la variable que contendra los clientes en la tabla
-    this.coleccionDeReservas = this.fs.collection<ProductoReservado>(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas`);
+    this.coleccionDeReservas = this.fs.collection<ProductoReservado>(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas`);
     this.coleccionDeReservas.valueChanges().subscribe(reserva => {
       // se le asignan los datos a la variable de los datos de la tabla de clientes cada vez que haya un cambio
       this.dataSource = new MatTableDataSource(reserva);
@@ -69,12 +69,12 @@ export class SistemaApartadoComponent implements OnInit {
 
   // funcion para vender el producto y unarchivarlo
   unArchivarProductoReservado() {
-    this.fs.doc<ProductoReservado>(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
+    this.fs.doc<ProductoReservado>(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
       .update({
         Estado: 'Retirado',
         Restante: 0
       }).then(res => {
-        this.db.database.ref(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
+        this.db.database.ref(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
           .update({
             Estado: 'Retirado',
             Restante: 0
@@ -90,9 +90,9 @@ export class SistemaApartadoComponent implements OnInit {
   // funcion para eliminar el producto de la lista de reservaciones
   eliminarProductoReservados() {
     if (this.productoReservado.Estado === 'Retirado') {
-      this.fs.doc<ProductoReservado>(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
+      this.fs.doc<ProductoReservado>(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
         .delete().then(res => {
-          this.db.database.ref(`AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
+          this.db.database.ref(`ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
             .remove().then(resp => {
               // tslint:disable-next-line:max-line-length
               this.servicio.newToast(1, 'Producto Eliminado de la Lista Correctamente', 'El producto se eliminó de la lista de reservaciones correctamente');
@@ -110,22 +110,22 @@ export class SistemaApartadoComponent implements OnInit {
   cancelarReservacion() {
     // se extrae la cantidad actual de productos para sumarle 1
     let cantidadProductosActual;
-    this.fs.doc<Producto>(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos/${this.productoReservado.Producto.Id}`)
+    this.fs.doc<Producto>(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.productoReservado.Producto.Id}`)
       .snapshotChanges().subscribe(producto => {
         cantidadProductosActual = producto.payload.data().Existencia;
       });
 
     // se espera 1 segundo para ejecutar el codigo posterior
     setTimeout(() => {
-      this.fs.doc<Producto>(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos/${this.productoReservado.Producto.Id}`)
+      this.fs.doc<Producto>(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.productoReservado.Producto.Id}`)
         .update({ Existencia: cantidadProductosActual + 1 }).then(res => {
           // tslint:disable-next-line:max-line-length
-          this.fs.doc<ProductoReservado>(`/AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
+          this.fs.doc<ProductoReservado>(`/ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
             .update({ Estado: 'Cancelado' });
-          this.db.database.ref(`AC Celulares/Control/Inventario/${this.servicio.tienda}/Productos/${this.productoReservado.Producto.Id}`)
+          this.db.database.ref(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.productoReservado.Producto.Id}`)
             .update({ Existencia: cantidadProductosActual + 1 }).then(resp => {
               // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`/AC Celulares/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
+              this.db.database.ref(`/ACR Motos/Control/Reservaciones/${this.servicio.tienda}/Reservas/${this.productoReservado.Id}`)
                 .update({ Estado: 'Cancelado' });
             }).then(re => {
               this.servicio.newToast(1, 'Cancelación con Éxito', 'La cancelación del producto se realizo correctamente');

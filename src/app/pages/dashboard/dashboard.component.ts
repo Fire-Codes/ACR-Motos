@@ -114,7 +114,7 @@ export class DashboardComponent implements OnInit {
 
     // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente para las ventas
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
       .snapshotChanges().subscribe(semana => {
         this.datosVentasSemanaFirestore = semana.payload.data();
         this.datosVentasSemanaLocal = this.datosVentasSemanaFirestore;
@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit {
       });
 
     // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente para las ventas
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
       .snapshotChanges().subscribe(anuales => {
         this.datosVentasAnualFirestore = anuales.payload.data();
         this.datosVentasAnualesLocal = this.datosVentasAnualFirestore;
@@ -137,7 +137,7 @@ export class DashboardComponent implements OnInit {
 
     // se extraen los datos de firestore del dia actual para mostrar en los graficos diarios correctamente para las ventas
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+    this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
       .snapshotChanges().subscribe(diario => {
         this.datosVentasDiarioFirestore = diario.payload.data();
         this.datosVentasDiarioLocal = this.datosVentasDiarioFirestore.Datos;
@@ -149,7 +149,7 @@ export class DashboardComponent implements OnInit {
 
     // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente para las ganancias
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
       .snapshotChanges().subscribe(semana => {
         this.datosGananciasSemanaFirestore = semana.payload.data();
         this.datosGananciasSemanaLocal = this.datosGananciasSemanaFirestore;
@@ -160,7 +160,7 @@ export class DashboardComponent implements OnInit {
       });
 
     // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente para las ganancias
-    this.fs.doc<TipoProductos>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+    this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
       .snapshotChanges().subscribe(anuales => {
         this.datosGananciasAnualFirestore = anuales.payload.data();
         this.datosGananciasAnualesLocal = this.datosGananciasAnualFirestore;
@@ -172,7 +172,7 @@ export class DashboardComponent implements OnInit {
 
     // se extraen los datos de firestore del dia actual para mostrar en los graficos diarios correctamente para las ganancias
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<VentasDiarias>(`AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+    this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
       .snapshotChanges().subscribe(diario => {
         this.datosGananciasDiarioFirestore = diario.payload.data();
         this.datosGananciasDiarioLocal = this.datosGananciasDiarioFirestore.Datos;
@@ -259,82 +259,82 @@ export class DashboardComponent implements OnInit {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
         });
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
         });
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana);
         });
     } else if (this.servicio.extraerNumeroSemana() === 53) {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
         });
     } else {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana);
         });
     }
 
     // se actualizan los datos del año siguiente al actual para su mejor funcionamiento
     // para las ventas
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales)
+    this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales)
       .then(res => {
         // tslint:disable-next-line:max-line-length
-        this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales);
+        this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales);
       });
 
     // para las ganancias
     // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales)
+    this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales)
       .then(res => {
         // tslint:disable-next-line:max-line-length
-        this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales);
+        this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales);
       });
 
 
@@ -343,70 +343,70 @@ export class DashboardComponent implements OnInit {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias);
         });
 
     } else if (((tiempo.getMonth() === 2) && (tiempo.getDate() === 28)) || ((tiempo.getMonth() === 2) && (tiempo.getDate() === 29))) {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
         });
     } else if ((tiempo.getDate() === 30) || (tiempo.getDate() === 31)) {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
         });
     } else {
 
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias)
+      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/AC Celulares/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias);
         });
     }
 
