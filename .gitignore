@@ -4,6 +4,10 @@
 /dist
 /tmp
 /out-tsc
+/acrmotos-win32-x64
+/acrmotos-linux-x64
+/Instaladores
+/public
 
 # dependencies
 /node_modules

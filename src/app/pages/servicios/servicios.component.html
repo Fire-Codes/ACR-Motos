@@ -1,0 +1,160 @@
+<body>
+    <!--Seleccionar Cliente Modal-->
+    <ng-template #seleccionarCliente let-modal>
+        <div class="modal-header bg-dark">
+            <h4 class="modal-title text-light">Seleccionar Cliente</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <mat-list>
+                <h3 mat-subheader>Folders</h3>
+                <mat-list-item *ngFor="let folder of folders">
+                    <mat-icon mat-list-icon>folder</mat-icon>
+                    <h4 mat-line>{{folder.name}}</h4>
+                    <p mat-line> {{folder.updated | date}} </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>Notes</h3>
+                <mat-list-item *ngFor="let note of notes">
+                    <mat-icon mat-list-icon>note</mat-icon>
+                    <h4 mat-line>{{note.name}}</h4>
+                    <p mat-line> {{note.updated | date}} </p>
+                </mat-list-item>
+            </mat-list>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Cancelar</button>
+            <button type="button" class="btn btn-dark text-light" (click)="modal.close('Close click')">Agregar</button>
+        </div>
+    </ng-template>
+    <!--Agregar un Nuevo Servicio Modal-->
+    <ng-template #agregarServicio let-modal>
+        <div class="modal-header bg-dark">
+            <h4 class="modal-title text-light">Agregar Nuevo Servicio</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="example-form">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="ID de Servicio" disabled value="SERV00001">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="Nombre" required value="Cambio de Pantalla">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field class="example-full-width">
+                            <input matInput type="number" placeholder="Precio" required value="300">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field>
+                            <select matNativeControl required>
+                                <option value="-1">Tipo de Servicio</option>
+                                <option value="Reparacion">Reparacion</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <mat-form-field style="width: 100%;">
+                            <textarea matInput placeholder="Descripcion"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Cancelar</button>
+            <button type="button" class="btn btn-dark text-light" (click)="modal.close('Close click')">Agregar</button>
+        </div>
+    </ng-template>
+    <!--Facturar un Servicio Modal-->
+    <ng-template #facturarServicio let-modal>
+        <div class="modal-header bg-secondary">
+            <h4 class="modal-title text-light">Facturar Servicio</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="example-form">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="ID de Servicio" disabled value="SERV00001">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="Nombre" required value="Cambio de Pantalla" disabled="">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button mat-stroked-button color="primary"
+                            (click)="mostrarModal(seleccionarCliente)">Seleccionar
+                            Vendedor</button>
+                    </div>
+                    <div class="col-6">
+                        <button mat-stroked-button color="primary"
+                            (click)="mostrarModal(seleccionarCliente)">Seleccionar
+                            Cliente</button>
+                    </div>
+
+                    <div class="col-6 mt-2">
+                        <mat-form-field>
+                            <select matNativeControl required>
+                                <option value="-1">Tipo de Servicio</option>
+                                <option value="Reparacion">Reparacion</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <mat-form-field>
+                            <span matPrefix>C$ &nbsp;</span>
+                            <input type="number" matInput placeholder="Precio" value="300" disabled="true">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <mat-form-field style="width: 100%;">
+                            <textarea matInput placeholder="Descripcion"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Cancelar</button>
+            <button type="button" class="btn btn-secondary text-light"
+                (click)="modal.close('Close click')">Facturar</button>
+        </div>
+    </ng-template>
+    <nav class="navbar navbar-dark bg-dark elevated shake">
+        <div class="container slideInLeft">
+            <a class="navbar-brand text-light">Servicios Técnicos</a>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <app-servicios-tecnicos></app-servicios-tecnicos>
+    </div>
+</body>

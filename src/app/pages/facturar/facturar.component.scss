@@ -1,0 +1,32 @@
+body {
+  background-color: #e5e9ed;
+}
+table {
+  width: 100%;
+}
+.elevated {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3), 0 10px 7px rgba(0, 0, 0, 0.22);
+}
+
+.widthFullCard {
+  width: 300px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.example-option-img {
+  vertical-align: middle;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+[dir="rtl"] .example-option-img {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+.example-margin {
+  margin: 0 10px;
+}
