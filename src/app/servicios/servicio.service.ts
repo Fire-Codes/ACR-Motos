@@ -39,7 +39,7 @@ export class ServicioService {
   Usuarios: AngularFirestoreCollection<Usuario>;
 
   // variable que contendra a que tienda direccionar
-  public tienda: string;
+  public tienda = 'Tienda Principal';
 
   // variable que contendra todos los meses del año
   public meses: string[] = [

@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
           // console.error('Error al actualizar los datos de estado de conexion: ' + err);
         });
         this.loginCorrecto = true;
-        this.servicio.navegar('plataforma');
+        this.servicio.navegar('inventario');
         // console.warn('Inicio de Sesion Correcto');
       }).catch((err) => {
         this.errorLogin = err;
