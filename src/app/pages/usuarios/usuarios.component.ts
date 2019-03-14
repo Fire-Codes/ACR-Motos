@@ -44,11 +44,7 @@ export class UsuariosComponent implements OnInit {
     this.coleccionDeUsuarios.valueChanges().subscribe(usuarios => {
       this.Usuarios = [];
       usuarios.forEach(usuario => {
-        if ((usuario.Correo === 'coronadodiego411@gmail.com') || (usuario.Correo === 'kevinaguilar9582@gmail.com')) {
-
-        } else {
-          this.Usuarios.push(usuario);
-        }
+        this.Usuarios.push(usuario);
       });
     });
   }
@@ -68,10 +64,7 @@ export class UsuariosComponent implements OnInit {
   // funcion para pagarle al usuario
   pagarleUsuario(usuario: Usuario) {
     this.fs.doc<Usuario>(`/ACR Motos/Control/Usuarios/${usuario.Correo}`).update({
-      TotalAcumulado: 0,
       Ventas: 0,
-      Flasheos: 0,
-      Reparaciones: 0
     }).then(resp => {
       this.servicio.newToast(1, 'Pago Realizado', 'Se ha reiniciado los datos del usuario correctamente');
     }).catch(err => {

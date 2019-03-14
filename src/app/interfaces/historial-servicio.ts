@@ -12,4 +12,12 @@ export interface HistorialServicio {
     Interes: number;
     ManoObra: number;
     Descripcion: string;
+    Hora: number;
+    Minuto: number;
+    Segundo: number;
+    Dia: number;
+    Mes: string;
+    Ano: number;
+    Fecha: string;
+    Tiempo: string;
 }

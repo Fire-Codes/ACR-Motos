@@ -23,11 +23,11 @@
       </div>
       <mat-form-field style="width: 100%;">
         <mat-select placeholder="Tipo de Servicio" name="tipoServicio" [(ngModel)]="tipoServicio">
-          <mat-option value="Hardware">
-            Hardware: Reparación, Cambio de Partes, Etc.
+          <mat-option value="Mantenimiento">
+            Mantenimiento
           </mat-option>
-          <mat-option value="Software">
-            Software: Flasheo, Liberacion, Formateo, Etc.
+          <mat-option value="Reparacion">
+            Reparacion
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -37,6 +37,23 @@
     <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Cancelar</button>
     <button type="button" class="btn btn-dark text-light"
       (click)="modal.close('Close click');agregarServicios()">Agregar</button>
+  </div>
+</ng-template>
+
+<ng-template #imprimirFacturaServicio let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Venta Completa</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>¿Desea Imprimir Factura?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Cerrar</button>
+    <button type="button" class="btn btn-outline-dark"
+      (click)="modal.close('Close click'); imprimirFacturaServicios()">Imprimir</button>
   </div>
 </ng-template>
 
@@ -115,7 +132,7 @@
     <div class="row">
       <div class="col-sm-6 col-md-6 col-lg-6">
         <mat-form-field style="width: 100%;">
-          <input type="text" matInput placeholder="Marca del Dispositivo" name="marcaDispositivo"
+          <input type="text" matInput placeholder="Marca del Vehículo" name="marcaDispositivo"
             [(ngModel)]="marcaDispositivo">
         </mat-form-field>
       </div>
@@ -157,7 +174,7 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Cancelar</button>
     <button type="button" class="btn btn-dark text-light"
-      (click)="modal.close('Close click');venderServicios()">Vender</button>
+      (click)="modal.close('Close click');venderServicios();abrirModal(imprimirFacturaServicio)">Vender</button>
   </div>
 </ng-template>
 

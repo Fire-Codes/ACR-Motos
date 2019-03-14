@@ -7,6 +7,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+// importacion del componente del navbar
+import { NavsideComponent } from './../navside/navside.component';
+
 export interface State {
   flag: string;
   name: string;
@@ -50,8 +53,11 @@ export class ServiciosComponent implements OnInit {
     }
   ];
   constructor(
-    public ngbModal: NgbModal
-  ) { }
+    public ngbModal: NgbModal,
+    public nav: NavsideComponent
+  ) {
+    this.nav.mostrarNav = true;
+  }
 
   ngOnInit() {
   }

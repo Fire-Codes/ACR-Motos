@@ -291,8 +291,6 @@ export class FacturarComponent implements OnInit {
       let totalCantidadComprasCliente = 0;
       let totalComprasActualesCliente = 0;
       let totalVentasVendedor = 0;
-      let totalFlasheosVendedor = 0;
-      let totalReparacionesVendedor = 0;
       const totalFacturas = this.totalFacturas + 1;
       const interes = this.tipoPago === 'Efectivo' ? 0 : (this.totalCordoba() * 5) / 100;
       let cliente: Cliente;
@@ -771,8 +769,6 @@ export class FacturarComponent implements OnInit {
         .subscribe(usuarios => {
           usuario = usuarios.payload.data();
           totalVentasVendedor = usuarios.payload.data().Ventas + 1;
-          totalFlasheosVendedor = usuarios.payload.data().Flasheos;
-          totalReparacionesVendedor = usuarios.payload.data().Reparaciones;
         });
       // tslint:disable-next-line:max-line-length
       this.fs.doc<HistorialCompra>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}/Historial de Compras/${tiempo.getDate()}-${this.meses[tiempo.getMonth()]}-${tiempo.getFullYear()},${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`)

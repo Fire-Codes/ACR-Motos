@@ -26,6 +26,9 @@ import { Servicio } from 'src/app/interfaces/servicio';
 import { TipoProductos } from 'src/app/interfaces/ventas/tipo-productos';
 import { VentasDiarias } from 'src/app/interfaces/ventas/dia/ventas-diarias';
 
+// importacion del componente modal para imprimir o no la factura
+import { ImprimirServicioModalComponent } from './../../modales/imprimir-servicio-modal/imprimir-servicio-modal.component';
+
 @Component({
   selector: 'app-servicios-tecnicos',
   templateUrl: './servicios-tecnicos.component.html',
@@ -116,7 +119,8 @@ export class ServiciosTecnicosComponent implements OnInit {
     public ngbModal: NgbModal,
     public fs: AngularFirestore,
     public servicio: ServicioService,
-    public db: AngularFireDatabase
+    public db: AngularFireDatabase,
+    public imprimirServicioModal: ImprimirServicioModalComponent
   ) {
     this.fs.doc<ControlTienda>('/ACR Motos/Control').snapshotChanges().subscribe(control => {
       this.cantidadServicios = control.payload.data()['Cantidad Total de Servicios'];
@@ -193,8 +197,13 @@ export class ServiciosTecnicosComponent implements OnInit {
     this.buscarClientes();
   }
 
+  // funcion para imprimir la factura del servicio
+  imprimirFacturaServicios() {
+    this.servicio.navegar('imprimirServicio');
+  }
+
   // funcion para abrir los modales de manera centrada
-  openVerticallyCentered(content: string, servicio: Servicio) {
+  openVerticallyCentered(content: any, servicio: Servicio) {
     this.servicioVender = servicio;
     this.reiniciarId();
     this.ngbModal.open(content, { centered: true });
@@ -216,256 +225,287 @@ export class ServiciosTecnicosComponent implements OnInit {
           'Cantidad Total de Servicios': this.cantidadServicios + 1
         });
         this.servicio.newToast(1, 'Servicio Agregado', 'El servicio se ha agregado correctamente');
+        this.tipoServicio = '';
+        this.nombreServicio = '';
       });
     });
   }
 
+  abrirModal(content: any) {
+    setTimeout(() => {
+      this.ngbModal.open(content, { centered: true });
+    }, 1000);
+  }
   // funcion para vender un servicio
   venderServicios() {
-    let cliente: Cliente;
-    let vendedor: Usuario;
-    this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`)
-      .snapshotChanges().subscribe(vendedores => vendedor = vendedores.payload.data());
-    this.fs.doc<Cliente>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}`)
-      .snapshotChanges().subscribe(clientes => cliente = clientes.payload.data());
-    const tiempo = new Date();
-    setTimeout(() => {
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<HistorialServicio>(`ACR Motos/Control/Historial de Ventas de Servicios/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}, ${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
-        Servicio: this.servicioVender,
-        Vendedor: vendedor,
-        Cliente: cliente,
-        MarcaDispositivo: this.marcaDispositivo,
-        ModeloDispositivo: this.modeloDispositivo,
-        TipoPago: this.tipoPago,
-        Interes: this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100,
-        ManoObra: this.precioFinal,
-        Descripcion: this.Descripcion
-      }).then(res => {
+    // tslint:disable-next-line:max-line-length
+    if ((this.marcaDispositivo === '') || (this.modeloDispositivo === '') || (this.Descripcion === '') || (this.tipoPago === '') || (this.precioFinal === 0)) {
+      this.servicio.newToast(0, 'Faltan Datos', 'Debe de rellenar todos los campos antes de vender el servicio');
+    } else {
+      let cliente: Cliente;
+      let vendedor: Usuario;
+      this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`)
+        .snapshotChanges().subscribe(vendedores => vendedor = vendedores.payload.data());
+      this.fs.doc<Cliente>(`ACR Motos/Control/Clientes/${this.valordebusquedaCliente}`)
+        .snapshotChanges().subscribe(clientes => cliente = clientes.payload.data());
+      const tiempo = new Date();
+      setTimeout(() => {
+        this.servicio.ServicioImprimirFactura = {
+          Servicio: this.servicioVender,
+          Vendedor: vendedor,
+          Cliente: cliente,
+          MarcaDispositivo: this.marcaDispositivo,
+          ModeloDispositivo: this.modeloDispositivo,
+          TipoPago: this.tipoPago,
+          Interes: this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100,
+          ManoObra: this.precioFinal,
+          Descripcion: this.Descripcion,
+          Hora: tiempo.getHours(),
+          Minuto: tiempo.getMinutes(),
+          Segundo: tiempo.getSeconds(),
+          Dia: tiempo.getDate(),
+          Mes: this.servicio.meses[tiempo.getMonth()],
+          Ano: tiempo.getFullYear(),
+          Fecha: `${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`,
+          Tiempo: `${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`
+        };
         // tslint:disable-next-line:max-line-length
-        this.servicio.newToast(1, 'Servicio Vendido', `Servicio ${this.idServicio} vendido al cliente ${this.valordebusquedaCliente} correctamente!`);
-        if (this.servicioVender.TipoServicio === 'Software') {
-          this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`).update({
-            Flasheos: vendedor.Flasheos + 1,
-            TotalAcumulado: vendedor.TotalAcumulado + ((this.precioFinal * 20) / 100)
-          });
-          // tslint:disable-next-line:max-line-length
-          this.datosGananciasDiarioLocal[3] += ((this.precioFinal * 80) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosGananciasSemanaLocal.Servicio[tiempo.getDay()] += ((this.precioFinal * 80) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosGananciasAnualesLocal.Servicio[tiempo.getMonth()] += ((this.precioFinal * 80) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+        this.fs.doc<HistorialServicio>(`ACR Motos/Control/Historial de Ventas de Servicios/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}, ${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`).set({
+          Servicio: this.servicioVender,
+          Vendedor: vendedor,
+          Cliente: cliente,
+          MarcaDispositivo: this.marcaDispositivo,
+          ModeloDispositivo: this.modeloDispositivo,
+          TipoPago: this.tipoPago,
+          Interes: this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100,
+          ManoObra: this.precioFinal,
+          Descripcion: this.Descripcion,
+          Hora: tiempo.getHours(),
+          Minuto: tiempo.getMinutes(),
+          Segundo: tiempo.getSeconds(),
+          Dia: tiempo.getDate(),
+          Mes: this.servicio.meses[tiempo.getMonth()],
+          Ano: tiempo.getFullYear(),
+          Fecha: `${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`,
+          Tiempo: `${tiempo.getHours()}:${tiempo.getMinutes()}:${tiempo.getSeconds()}`
+        }).then(res => {
 
-          this.totalGananciasDia += ((this.precioFinal * 80) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalGananciasSemana += ((this.precioFinal * 80) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalGananciasAnual += ((this.precioFinal * 80) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+          if (this.servicioVender.TipoServicio === 'Software') {
+            // tslint:disable-next-line:max-line-length
+            this.datosGananciasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosGananciasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosGananciasAnualesLocal.Servicio[tiempo.getMonth()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
-
-          // tslint:disable-next-line:max-line-length
-          this.datosVentasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosVentasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosVentasAnualFirestore.Servicio[tiempo.getMonth()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-
-          this.totalVentasDia += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalVentasSemana += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalVentasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-            .update({
-              Datos: this.datosVentasDiarioLocal,
-              TotalVentas: this.totalVentasDia
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-                .update({
-                  Datos: this.datosVentasDiarioLocal,
-                  TotalVentas: this.totalVentasDia
-                });
-            });
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-            .update({
-              TotalVentas: this.totalVentasSemana,
-              Servicio: this.datosVentasSemanaLocal.Servicio
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-                .update({
-                  TotalVentas: this.totalVentasSemana,
-                  Servicio: this.datosVentasSemanaLocal.Servicio
-                });
-            });
-
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-            .update({
-              Servicio: this.datosVentasAnualesLocal.Servicio,
-              TotalVentas: this.totalVentasAnual
-            }).then(resp => {
-              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-                .update({
-                  Servicio: this.datosVentasAnualesLocal.Servicio,
-                  TotalVentas: this.totalVentasAnual
-                });
-            });
-
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-            .update({
-              Datos: this.datosGananciasDiarioLocal,
-              TotalVentas: this.totalGananciasDia
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-                .update({
-                  Datos: this.datosGananciasDiarioLocal,
-                  TotalVentas: this.totalGananciasDia
-                });
-            });
-
-          // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-            .update({
-              TotalVentas: this.totalGananciasSemana,
-              Servicio: this.datosGananciasSemanaLocal.Servicio
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-                .update({
-                  TotalVentas: this.totalGananciasSemana,
-                  Servicio: this.datosGananciasSemanaLocal.Servicio
-                });
-            });
-
-          // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-            .update({
-              Servicio: this.datosGananciasAnualesLocal.Servicio,
-              TotalVentas: this.totalGananciasAnual
-            }).then(resp => {
-              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-                .update({
-                  Servicio: this.datosGananciasAnualesLocal.Servicio,
-                  TotalVentas: this.totalGananciasAnual
-                });
-            });
-        } else {
-          this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${this.valordebusquedaVendedor}`).update({
-            Reparaciones: vendedor.Reparaciones + 1,
-            TotalAcumulado: vendedor.TotalAcumulado + ((this.precioFinal * 50) / 100)
-          });
+            this.totalGananciasDia += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalGananciasSemana += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalGananciasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
 
-          // tslint:disable-next-line:max-line-length
-          this.datosGananciasDiarioLocal[3] += ((this.precioFinal * 50) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosGananciasSemanaLocal.Servicio[tiempo.getDay()] += ((this.precioFinal * 50) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosGananciasAnualesLocal.Servicio[tiempo.getMonth()] += ((this.precioFinal * 50) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosVentasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosVentasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosVentasAnualFirestore.Servicio[tiempo.getMonth()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
-          this.totalGananciasDia += ((this.precioFinal * 50) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalGananciasSemana += ((this.precioFinal * 50) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalGananciasAnual += ((this.precioFinal * 50) / 100) + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalVentasDia += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalVentasSemana += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalVentasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              .update({
+                Datos: this.datosVentasDiarioLocal,
+                TotalVentas: this.totalVentasDia
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+                  .update({
+                    Datos: this.datosVentasDiarioLocal,
+                    TotalVentas: this.totalVentasDia
+                  });
+              });
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              .update({
+                TotalVentas: this.totalVentasSemana,
+                Servicio: this.datosVentasSemanaLocal.Servicio
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+                  .update({
+                    TotalVentas: this.totalVentasSemana,
+                    Servicio: this.datosVentasSemanaLocal.Servicio
+                  });
+              });
+
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              .update({
+                Servicio: this.datosVentasAnualesLocal.Servicio,
+                TotalVentas: this.totalVentasAnual
+              }).then(resp => {
+                this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+                  .update({
+                    Servicio: this.datosVentasAnualesLocal.Servicio,
+                    TotalVentas: this.totalVentasAnual
+                  });
+              });
+
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              .update({
+                Datos: this.datosGananciasDiarioLocal,
+                TotalVentas: this.totalGananciasDia
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+                  .update({
+                    Datos: this.datosGananciasDiarioLocal,
+                    TotalVentas: this.totalGananciasDia
+                  });
+              });
+
+            // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              .update({
+                TotalVentas: this.totalGananciasSemana,
+                Servicio: this.datosGananciasSemanaLocal.Servicio
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+                  .update({
+                    TotalVentas: this.totalGananciasSemana,
+                    Servicio: this.datosGananciasSemanaLocal.Servicio
+                  });
+              });
+
+            // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              .update({
+                Servicio: this.datosGananciasAnualesLocal.Servicio,
+                TotalVentas: this.totalGananciasAnual
+              }).then(resp => {
+                this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+                  .update({
+                    Servicio: this.datosGananciasAnualesLocal.Servicio,
+                    TotalVentas: this.totalGananciasAnual
+                  });
+              });
+          } else {
 
 
-          // tslint:disable-next-line:max-line-length
-          this.datosVentasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosVentasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          // tslint:disable-next-line:max-line-length
-          this.datosVentasAnualFirestore.Servicio[tiempo.getMonth()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosGananciasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosGananciasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosGananciasAnualesLocal.Servicio[tiempo.getMonth()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
-          this.totalVentasDia += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalVentasSemana += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
-          this.totalVentasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalGananciasDia += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalGananciasSemana += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalGananciasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-            .update({
-              Datos: this.datosVentasDiarioLocal,
-              TotalVentas: this.totalVentasDia
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-                .update({
-                  Datos: this.datosVentasDiarioLocal,
-                  TotalVentas: this.totalVentasDia
-                });
-            });
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-            .update({
-              TotalVentas: this.totalVentasSemana,
-              Servicio: this.datosVentasSemanaLocal.Servicio
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-                .update({
-                  TotalVentas: this.totalVentasSemana,
-                  Servicio: this.datosVentasSemanaLocal.Servicio
-                });
-            });
 
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-            .update({
-              Servicio: this.datosVentasAnualesLocal.Servicio,
-              TotalVentas: this.totalVentasAnual
-            }).then(resp => {
-              this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-                .update({
-                  Servicio: this.datosVentasAnualesLocal.Servicio,
-                  TotalVentas: this.totalVentasAnual
-                });
-            });
+            // tslint:disable-next-line:max-line-length
+            this.datosVentasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosVentasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            // tslint:disable-next-line:max-line-length
+            this.datosVentasAnualFirestore.Servicio[tiempo.getMonth()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-            .update({
-              Datos: this.datosGananciasDiarioLocal,
-              TotalVentas: this.totalGananciasDia
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
-                .update({
-                  Datos: this.datosGananciasDiarioLocal,
-                  TotalVentas: this.totalGananciasDia
-                });
-            });
+            this.totalVentasDia += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalVentasSemana += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.totalVentasAnual += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
 
-          // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente
-          // tslint:disable-next-line:max-line-length
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-            .update({
-              TotalVentas: this.totalGananciasSemana,
-              Servicio: this.datosGananciasSemanaLocal.Servicio
-            }).then(resp => {
-              // tslint:disable-next-line:max-line-length
-              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
-                .update({
-                  TotalVentas: this.totalGananciasSemana,
-                  Servicio: this.datosGananciasSemanaLocal.Servicio
-                });
-            });
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              .update({
+                Datos: this.datosVentasDiarioLocal,
+                TotalVentas: this.totalVentasDia
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+                  .update({
+                    Datos: this.datosVentasDiarioLocal,
+                    TotalVentas: this.totalVentasDia
+                  });
+              });
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              .update({
+                TotalVentas: this.totalVentasSemana,
+                Servicio: this.datosVentasSemanaLocal.Servicio
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+                  .update({
+                    TotalVentas: this.totalVentasSemana,
+                    Servicio: this.datosVentasSemanaLocal.Servicio
+                  });
+              });
 
-          // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente
-          this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-            .update({
-              Servicio: this.datosGananciasAnualesLocal.Servicio,
-              TotalVentas: this.totalGananciasAnual
-            }).then(resp => {
-              this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
-                .update({
-                  Servicio: this.datosGananciasAnualesLocal.Servicio,
-                  TotalVentas: this.totalGananciasAnual
-                });
-              this.reiniciarInputs();
-            });
-        }
-      });
-    }, 2000);
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              .update({
+                Servicio: this.datosVentasAnualesLocal.Servicio,
+                TotalVentas: this.totalVentasAnual
+              }).then(resp => {
+                this.db.database.ref(`ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+                  .update({
+                    Servicio: this.datosVentasAnualesLocal.Servicio,
+                    TotalVentas: this.totalVentasAnual
+                  });
+              });
+
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<VentasDiarias>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+              .update({
+                Datos: this.datosGananciasDiarioLocal,
+                TotalVentas: this.totalGananciasDia
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate()}-${this.servicio.meses[tiempo.getMonth()]}-${tiempo.getFullYear()}`)
+                  .update({
+                    Datos: this.datosGananciasDiarioLocal,
+                    TotalVentas: this.totalGananciasDia
+                  });
+              });
+
+            // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente
+            // tslint:disable-next-line:max-line-length
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+              .update({
+                TotalVentas: this.totalGananciasSemana,
+                Servicio: this.datosGananciasSemanaLocal.Servicio
+              }).then(resp => {
+                // tslint:disable-next-line:max-line-length
+                this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana()}`)
+                  .update({
+                    TotalVentas: this.totalGananciasSemana,
+                    Servicio: this.datosGananciasSemanaLocal.Servicio
+                  });
+              });
+
+            // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente
+            this.fs.doc<TipoProductos>(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+              .update({
+                Servicio: this.datosGananciasAnualesLocal.Servicio,
+                TotalVentas: this.totalGananciasAnual
+              }).then(resp => {
+                this.db.database.ref(`ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno()}`)
+                  .update({
+                    Servicio: this.datosGananciasAnualesLocal.Servicio,
+                    TotalVentas: this.totalGananciasAnual
+                  });
+                this.servicio.newToast(1, 'Servicio Vendido', `Servicio vendido al cliente ${this.valordebusquedaCliente} correctamente!`);
+                this.reiniciarInputs();
+              });
+          }
+        });
+      }, 1000);
+    }
   }
 
   // funcion para eliminar el servicio

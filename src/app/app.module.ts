@@ -63,6 +63,8 @@ import { ServiciosTecnicosComponent } from './pages/tablas/servicios-tecnicos/se
 import { PedidosComponent } from './pages/pedidos/pedidos.component';
 import { HistorialFacturasComponent } from './pages/historial-facturas/historial-facturas.component';
 import { TablaHistorialFacturasComponent } from './pages/tablas/tabla-historial-facturas/tabla-historial-facturas.component';
+import { ImprimirServicioModalComponent } from './pages/modales/imprimir-servicio-modal/imprimir-servicio-modal.component';
+import { ImprimirServicioComponent } from './pages/impresiones/imprimir-servicio/imprimir-servicio.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +100,9 @@ import { TablaHistorialFacturasComponent } from './pages/tablas/tabla-historial-
     ServiciosTecnicosComponent,
     PedidosComponent,
     HistorialFacturasComponent,
-    TablaHistorialFacturasComponent
+    TablaHistorialFacturasComponent,
+    ImprimirServicioModalComponent,
+    ImprimirServicioComponent
   ],
   imports: [
     BrowserModule,
@@ -132,7 +136,9 @@ import { TablaHistorialFacturasComponent } from './pages/tablas/tabla-historial-
     TablaClientesComponent,
     DetallesCompraComponent,
     ProductosCompradosComponent,
-    TablaHistorialComprasClienteComponent
+    TablaHistorialComprasClienteComponent,
+    ImprimirServicioModalComponent,
+    ImprimirServicioComponent
   ],
   bootstrap: [AppComponent]
 })

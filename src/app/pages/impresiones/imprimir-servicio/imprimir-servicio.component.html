@@ -1,0 +1,125 @@
+<div class="invoice-box">
+  <table cellpadding="0" cellspacing="0">
+    <tr class="top">
+      <td colspan="2">
+        <table>
+          <tr>
+            <td class="title">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/acr-motos.appspot.com/o/Logotipo.png?alt=media&token=fdd841c3-4197-4e37-918c-0d0e86863e5e"
+                style="width:100px;">
+            </td>
+
+            <td>
+              Factura #: {{cantidadFacturas+1}}<br>
+              Creada: {{ServicioImprimirFactura.Fecha}}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr class="information">
+      <td colspan="2">
+        <table>
+          <tr>
+            <td>
+              ACR Motos.<br>
+              Cruz Roja 20 mts. al Norte<br>
+              Chichigalpa, Chinandega<br>
+              acrmotosnic@gmail.com<br>
+              23468367<br>
+              RUC #: 0842006960000W
+            </td>
+
+            <td>
+              Vendedor: {{ServicioImprimirFactura.Vendedor.Nombres}} {{ServicioImprimirFactura.Vendedor.Apellidos}}<br>
+              Cliente: {{ServicioImprimirFactura.Cliente.NombreCompleto}}<br>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr class="heading">
+      <td>
+        Método de Pago
+      </td>
+
+      <td>
+        Monto
+      </td>
+    </tr>
+
+    <tr class="details">
+      <td>
+        {{ServicioImprimirFactura.TipoPago}}
+      </td>
+
+      <td>
+        C${{ServicioImprimirFactura.ManoObra - ServicioImprimirFactura.Interes}}
+      </td>
+    </tr>
+
+    <tr class="heading">
+      <td>
+        Extras
+      </td>
+
+      <td>
+        Monto
+      </td>
+    </tr>
+
+    <tr class="details">
+      <td>
+        Interés
+      </td>
+
+      <td>
+        C${{ServicioImprimirFactura.Interes}}
+      </td>
+    </tr>
+  </table>
+</div>
+<table class="table mx-auto" style="max-width: 100%; min-width: 80%;">
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Monto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ServicioImprimirFactura.Servicio.TipoServicio}} - {{ServicioImprimirFactura.Servicio.Nombre}} -
+        {{ServicioImprimirFactura.MarcaDispositivo}} - {{ServicioImprimirFactura.ModeloDispositivo}}</td>
+        <td>{{ServicioImprimirFactura.ManoObra}}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="invoice-box mt-5">
+  <table cellpadding="0" cellspacing="0">
+    <tr class="information">
+      <td colspan="2">
+        <table>
+          <tr>
+            <td style="max-width: 50px;">
+              <hr style="color: black; background-color: black;"><br>
+              <div class="text-center mt-0">ACR Motos</div>
+            </td>
+
+            <td>
+              <b>SubTotal: C${{ServicioImprimirFactura.ManoObra}}</b><br>
+              <b>Extras: C${{ServicioImprimirFactura.Interes}}</b><br>
+              <b>Total: C${{ServicioImprimirFactura.ManoObra + ServicioImprimirFactura.Interes}}</b>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="float-right">
+  <button (click)="navegar()" class="btn btn-primary m-3" id="btnRegresar">Regresar</button>
+  <button (click)="imprimir()" class="btn btn-warning m-3" id="btnImprimir">Imprimir</button>
+</div>

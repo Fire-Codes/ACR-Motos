@@ -5,12 +5,12 @@
 }
 .sidePanelAbierto {
   /*width: 195px;*/
-  background-color: darkslategray;
+  background-color: #263238;
   transition: width 0.3s !important;
 }
 .sidePanelCerrado {
   /*width: 90px;*/
-  background-color: darkslategray;
+  background-color: #263238;
   transition: width 0.3s !important;
 }
 .elevated {
@@ -30,7 +30,7 @@
 }
 .onHover:hover {
   cursor: pointer;
-  background-color: #00000031;
+  background-color: #4f5b62;
 }
 
 hr {

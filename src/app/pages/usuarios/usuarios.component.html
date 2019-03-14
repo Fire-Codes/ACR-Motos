@@ -34,9 +34,7 @@
               <div class="content">
                 <div class="main">
                   <h3 class="name">{{usuario.Nombres}}</h3>
-                  <p class="profession">{{usuario.Cargo}} AC Celular</p>
-                  <p class="text-center">Pago Acumulado:</p><br>
-                  <p class="text-center text-success">C${{usuario.TotalAcumulado}}</p>
+                  <p class="profession">{{usuario.Cargo}} ACR Motos</p>
                 </div>
               </div>
             </div> <!-- end front panel -->
@@ -48,30 +46,11 @@
 
                   <div class="stats-container">
                     <div class="stats">
-                      <h4>{{usuario.Reparaciones}}</h4>
-                      <p>
-                        Reparaciones
-                      </p>
-                    </div>
-                    <div class="stats">
                       <h4>{{usuario.Ventas}}</h4>
                       <p>
                         Ventas
                       </p>
                     </div>
-                    <div class="stats">
-                      <h4>{{usuario.Flasheos}}</h4>
-                      <p>
-                        Flasheos
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row mt-5">
-                <div class="col-sm-12 col-md-12 col-lg-12 d-flex align-items-center justify-content-center">
-                  <div class="mx-auto">
-                    <button (click)="pagarleUsuario(usuario)" class="btn btn-primary">Realizar Pago</button>
                   </div>
                 </div>
               </div>

@@ -46,9 +46,6 @@ export class PerfilComponent implements OnInit {
         this.Tipo = usuario.payload.data().Tipo;
         this.Cargo = usuario.payload.data().Cargo;
         this.Ventas = usuario.payload.data().Ventas;
-        this.Flasheos = usuario.payload.data().Flasheos;
-        this.Reparaciones = usuario.payload.data().Reparaciones;
-        this.TotalAcumulado = usuario.payload.data().TotalAcumulado;
       });
   }
 

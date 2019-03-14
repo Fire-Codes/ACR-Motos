@@ -1,3 +1,5 @@
+import { HistorialServicio } from './../interfaces/historial-servicio';
+import { Servicio } from 'src/app/interfaces/servicio';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -34,6 +36,9 @@ export class ServicioService {
 
   // variable que contendra al cliente al cual se veran sus compras
   public ClienteVerCompras: Cliente = null;
+
+  // variable que contendra el servicio a ser impreso en factura
+  public ServicioImprimirFactura: HistorialServicio = null;
 
   // variable que contendra el arreglo de usuarios
   Usuarios: AngularFirestoreCollection<Usuario>;
@@ -143,7 +148,6 @@ export class ServicioService {
   public logout() {
     return this.auth.auth.signOut().then((response) => {
       // console.warn('Se ha cerrado Sesion');
-      this.tienda = '';
       this.navegar('');
     }).catch((err) => {
       // console.error(err);
