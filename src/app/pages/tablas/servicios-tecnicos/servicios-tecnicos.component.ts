@@ -292,7 +292,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
           if (this.servicioVender.TipoServicio === 'Software') {
             // tslint:disable-next-line:max-line-length
-            this.datosGananciasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.datosGananciasDiarioLocal[1] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
             this.datosGananciasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
@@ -304,7 +304,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
 
             // tslint:disable-next-line:max-line-length
-            this.datosVentasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.datosVentasDiarioLocal[1] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
             this.datosVentasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
@@ -398,7 +398,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
 
             // tslint:disable-next-line:max-line-length
-            this.datosGananciasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.datosGananciasDiarioLocal[1] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
             this.datosGananciasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
@@ -410,7 +410,7 @@ export class ServiciosTecnicosComponent implements OnInit {
 
 
             // tslint:disable-next-line:max-line-length
-            this.datosVentasDiarioLocal[3] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
+            this.datosVentasDiarioLocal[1] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length
             this.datosVentasSemanaLocal.Servicio[tiempo.getDay()] += this.precioFinal + (this.tipoPago === 'Efectivo' ? 0 : (this.precioFinal * 5) / 100);
             // tslint:disable-next-line:max-line-length

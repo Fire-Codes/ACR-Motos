@@ -84,6 +84,9 @@ export class InventarioComponent implements OnInit {
   // variable que contendra el nuevo proveedor
   nuevoProveedor = '';
 
+  // variable que contendra todos los id de los productos actuales ingresados a la tienda
+  IdProductos: string[] = [];
+
 
   constructor(
     public nav: NavsideComponent,
@@ -109,6 +112,7 @@ export class InventarioComponent implements OnInit {
     this.fs.doc<ControlTienda>('ACR Motos/Control').snapshotChanges().subscribe(control => {
       this.totalGeneralProductos = control.payload.data()['Cantidad Total de Productos'];
       this.Proveedores = control.payload.data().Proveedores;
+      this.IdProductos = control.payload.data().IdProductos;
     });
 
     // Se extraen todos los productos ingresados
@@ -131,7 +135,6 @@ export class InventarioComponent implements OnInit {
       .subscribe((campos: Action<DocumentSnapshot<CamposTiendas>>) => {
         this.totalProductos = campos.payload.data()['Cantidad de Productos'];
         this.categorias = campos.payload.data().Categorias;
-        this.reiniciarId();
       });
 
     // se extrae la cantidad general de productos de las 3 tiendas
@@ -283,10 +286,25 @@ export class InventarioComponent implements OnInit {
   }
   // funcion para agregar un nuevo producto
   agregarProductos() {
+    let similares = 0;
+    let auxiliar = this.Id;
+    this.Id = 'PROD';
+    this.Id += auxiliar;
+    this.IdProductos.forEach(producto => {
+      if (producto === this.Id) {
+        similares++;
+      }
+    });
     // tslint:disable-next-line:max-line-length
-    if ((this.Descripcion === '') || (this.Nombre === '') || (this.Marca === '') || (this.Categoria === '') || (this.PCompra === 0) || (this.PVenta === 0) || (this.proveedor === '')) {
+    if ((this.Id === '') || (this.Descripcion === '') || (this.Nombre === '') || (this.Marca === '') || (this.Categoria === '') || (this.PCompra === 0) || (this.PVenta === 0) || (this.proveedor === '')) {
       // tslint:disable-next-line:max-line-length
       this.servicio.newToast(0, 'Debe rellenar todos los campos', 'Debe de rellenar todos los campos obligatorios para poder agregar el producto a la base de datos');
+      auxiliar = '';
+      similares = 0;
+    } else if (similares > 0) {
+      this.servicio.newToast(0, 'Error de ID', 'Este ID ya pertenece a otro producto ingresado.');
+      similares = 0;
+      auxiliar = '';
     } else {
       this.fs.doc<Producto>(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.Id}`).set({
         Id: this.Id,
@@ -312,7 +330,6 @@ export class InventarioComponent implements OnInit {
           Contador: contador
         }).then(resp => {
           // console.warn('Cantidad de productos actualizada correctamente' + resp);
-          this.reiniciarInputs();
         }).catch(err => {
           // console.error('Hubo un error al actualizar la cantidad de productos: ' + err);
         });
@@ -367,6 +384,16 @@ export class InventarioComponent implements OnInit {
 
       }).catch(err => {
         // console.error('Hubo un error al actualizar la cantidad de productos: ' + err);
+      });
+      this.IdProductos.push(this.Id);
+      this.fs.doc<ControlTienda>('ACR Motos/Control').update({
+        IdProductos: this.IdProductos
+      }).then(res => {
+        console.warn(this.IdProductos);
+        this.reiniciarInputs();
+        auxiliar = '';
+      }).catch(err => {
+        console.error('Error al actualizar el array de id productos');
       });
     }
   }
@@ -434,8 +461,6 @@ export class InventarioComponent implements OnInit {
   // funcion para reiniciar todos los inputs
   reiniciarInputs() {
     this.Id = '';
-    this.Id += 'PROD';
-    this.Id += this.contador + 1;
     this.Categoria = '';
     this.Descripcion = '';
     this.Estado = 'Disponible';
@@ -450,9 +475,9 @@ export class InventarioComponent implements OnInit {
   }
 
   // funcion para agregar un nuevo id
-  reiniciarId() {
+  /*reiniciarId() {
     this.Id = '';
     this.Id += 'PROD';
     this.Id += this.contador + 1;
-  }
+  }*/
 }

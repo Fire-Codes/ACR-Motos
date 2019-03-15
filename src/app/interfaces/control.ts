@@ -9,4 +9,5 @@ export interface ControlTienda {
     'Cantidad Total de Facturas': number;
     'Cantidad Total de Servicios': number;
     Proveedores: string[];
+    IdProductos: string[];
 }

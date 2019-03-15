@@ -186,19 +186,13 @@ export class DashboardComponent implements OnInit {
     // se generan las variables de ventas para posteriormente mandarlas a llamar desde su respectivo grafico
     this.pushVentasSemana = {
       TotalVentas: 0,
-      Accesorios: [0, 0, 0, 0, 0, 0, 0],
       Repuestos: [0, 0, 0, 0, 0, 0, 0],
-      Celulares: [0, 0, 0, 0, 0, 0, 0],
-      Servicio: [0, 0, 0, 0, 0, 0, 0],
-      Herramientas: [0, 0, 0, 0, 0, 0, 0]
+      Servicio: [0, 0, 0, 0, 0, 0, 0]
     };
     this.pushVentasMensuales = {
       TotalVentas: 0,
-      Accesorios: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       Repuestos: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      Celulares: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       Servicio: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      Herramientas: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     };
     this.pushVentasDiarias = {
       Datos: [0, 0, 0, 0, 0],
@@ -208,22 +202,16 @@ export class DashboardComponent implements OnInit {
     // se generan las variables de ganancias para posteriormente mandarlas a llamar desde su respectivo grafico
     this.pushGananciasSemana = {
       TotalVentas: 0,
-      Accesorios: [0, 0, 0, 0, 0, 0, 0],
       Repuestos: [0, 0, 0, 0, 0, 0, 0],
-      Celulares: [0, 0, 0, 0, 0, 0, 0],
-      Servicio: [0, 0, 0, 0, 0, 0, 0],
-      Herramientas: [0, 0, 0, 0, 0, 0, 0]
+      Servicio: [0, 0, 0, 0, 0, 0, 0]
     };
     this.pushGananciasMensuales = {
       TotalVentas: 0,
-      Accesorios: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       Repuestos: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      Celulares: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      Servicio: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      Herramientas: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      Servicio: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     };
     this.pushGananciasDiarias = {
-      Datos: [0, 0, 0, 0, 0],
+      Datos: [0, 0],
       TotalVentas: 0
     };
 
@@ -434,34 +422,16 @@ export class DashboardComponent implements OnInit {
         labels: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         datasets: [
           {
-            label: 'Accesorios',
-            data: this.datosVentasSemanaLocal.Accesorios,
-            // data: this.pushVentasSemana.Accesorios,
-            backgroundColor: '#007bff'
-          },
-          {
             label: 'Repuestos',
             data: this.datosVentasSemanaLocal.Repuestos,
             // data: this.pushVentasSemana.Repuestos,
             backgroundColor: '#28a745'
           },
           {
-            label: 'Celulares',
-            data: this.datosVentasSemanaLocal.Celulares,
-            // data: this.pushVentasSemana.Celulares,
-            backgroundColor: '#17a2b8'
-          },
-          {
             label: 'Servicio',
             data: this.datosVentasSemanaLocal.Servicio,
             // data: this.pushVentasSemana.Servicio,
             backgroundColor: '#ffc107'
-          },
-          {
-            label: 'Herramientas',
-            data: this.datosVentasSemanaLocal.Herramientas,
-            // data: this.pushVentasSemana.Herramientas,
-            backgroundColor: '#dc3545'
           }
         ]
       },
@@ -498,33 +468,15 @@ export class DashboardComponent implements OnInit {
         ],
         datasets: [
           {
-            label: 'Accesorios',
-            data: this.datosVentasAnualesLocal.Accesorios,
-            borderColor: '#007bff',
-            fill: false
-          },
-          {
             label: 'Repuestos',
             data: this.datosVentasAnualesLocal.Repuestos,
             borderColor: '#28a745',
             fill: false
           },
           {
-            label: 'Celulares',
-            data: this.datosVentasAnualesLocal.Celulares,
-            borderColor: '#17a2b8',
-            fill: false
-          },
-          {
             label: 'Servicio',
             data: this.datosVentasAnualesLocal.Servicio,
             borderColor: '#ffc107',
-            fill: false
-          },
-          {
-            label: 'Herramientas',
-            data: this.datosVentasAnualesLocal.Herramientas,
-            borderColor: '#dc3545',
             fill: false
           }
         ]
@@ -548,27 +500,18 @@ export class DashboardComponent implements OnInit {
       type: 'doughnut',
       data: {
         labels: [
-          'Accesorios',
           'Repuestos',
-          'Celulares',
-          'Servicio',
-          'Herramientas'
+          'Servicio'
         ],
         datasets: [{
           data: this.datosVentasDiarioLocal,
           backgroundColor: [
             '#007bff',
-            '#28a745',
-            '#17a2b8',
-            '#ffc107',
-            '#dc3545'
+            '#28a745'
           ],
           hoverBackgroundColor: [
             '#007bff',
-            '#28a745',
-            '#17a2b8',
-            '#ffc107',
-            '#dc3545'
+            '#28a745'
           ]
         }
         ]
@@ -584,34 +527,16 @@ export class DashboardComponent implements OnInit {
         labels: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         datasets: [
           {
-            label: 'Accesorios',
-            data: this.datosGananciasSemanaLocal.Accesorios,
-            // data: this.pushVentasSemana.Accesorios,
-            backgroundColor: '#007bff'
-          },
-          {
             label: 'Repuestos',
             data: this.datosGananciasSemanaLocal.Repuestos,
             // data: this.pushVentasSemana.Repuestos,
             backgroundColor: '#28a745'
           },
           {
-            label: 'Celulares',
-            data: this.datosGananciasSemanaLocal.Celulares,
-            // data: this.pushVentasSemana.Celulares,
-            backgroundColor: '#17a2b8'
-          },
-          {
             label: 'Servicio',
             data: this.datosGananciasSemanaLocal.Servicio,
             // data: this.pushVentasSemana.Servicio,
             backgroundColor: '#ffc107'
-          },
-          {
-            label: 'Herramientas',
-            data: this.datosGananciasSemanaLocal.Herramientas,
-            // data: this.pushVentasSemana.Herramientas,
-            backgroundColor: '#dc3545'
           }
         ]
       },
@@ -648,33 +573,15 @@ export class DashboardComponent implements OnInit {
         ],
         datasets: [
           {
-            label: 'Accesorios',
-            data: this.datosGananciasAnualesLocal.Accesorios,
-            borderColor: '#007bff',
-            fill: false
-          },
-          {
             label: 'Repuestos',
             data: this.datosGananciasAnualesLocal.Repuestos,
             borderColor: '#28a745',
             fill: false
           },
           {
-            label: 'Celulares',
-            data: this.datosGananciasAnualesLocal.Celulares,
-            borderColor: '#17a2b8',
-            fill: false
-          },
-          {
             label: 'Servicio',
             data: this.datosGananciasAnualesLocal.Servicio,
             borderColor: '#ffc107',
-            fill: false
-          },
-          {
-            label: 'Herramientas',
-            data: this.datosGananciasAnualesLocal.Herramientas,
-            borderColor: '#dc3545',
             fill: false
           }
         ]
@@ -698,27 +605,18 @@ export class DashboardComponent implements OnInit {
       type: 'doughnut',
       data: {
         labels: [
-          'Accesorios',
           'Repuestos',
-          'Celulares',
-          'Servicio',
-          'Herramientas'
+          'Servicio'
         ],
         datasets: [{
           data: this.datosGananciasDiarioLocal,
           backgroundColor: [
             '#007bff',
-            '#28a745',
-            '#17a2b8',
-            '#ffc107',
-            '#dc3545'
+            '#28a745'
           ],
           hoverBackgroundColor: [
             '#007bff',
-            '#28a745',
-            '#17a2b8',
-            '#ffc107',
-            '#dc3545'
+            '#28a745'
           ]
         }
         ]
