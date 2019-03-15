@@ -13,6 +13,7 @@
     "e2e": "ng e2e",
     "electron": "electron .",
     "electron-build": "ng build --optimization=true --prod=true --vendor-source-map",
+    "electron-build-run": "npm run electron-build && npm run electron",
     "electron-package-windows": "npm run electron-build && electron-packager . --no-prune --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite --icon ./src/assets/icon.ico",
     "electron-package-linux": "electron-packager . --no-prune --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite --platform=linux --arch=x64 --icon=src/assets/Logotipo/Logotipo.png"
   },
