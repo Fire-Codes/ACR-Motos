@@ -284,6 +284,14 @@ export class InventarioComponent implements OnInit {
       });
     });
   }
+
+  // funcion para exportar a excel
+  exportarExcel() {
+    this.servicio.exportarExcel(this.dataSource.data, 'Inventario');
+    console.log('Exportando a Excel');
+  }
+
+
   // funcion para agregar un nuevo producto
   agregarProductos() {
     let similares = 0;

@@ -22,12 +22,18 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireStorage } from 'angularfire2/storage';
 
+// se importan las dependencias para exportar el inventario a excel
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicioService {
 
+  // variables de configuracion pra exportar el inventario a excel
+  public excel_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8';
+  public excel_ext = '.xlsx';
   // variable que contendra temporalmente la factura a imprimir
   public facturaImprimir: Factura = null;
 
@@ -91,6 +97,22 @@ export class ServicioService {
     });
     // console.warn(Usuarioss);
     return Usuarioss;
+  }
+
+  public exportarExcel(productos: Producto[], nombreArchivoExcel: string) {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(productos);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'data': worksheet },
+      SheetNames: ['data']
+    };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.guardarComoExcel(excelBuffer, nombreArchivoExcel);
+  }
+
+  public guardarComoExcel(buffer: any, fileName: string) {
+    const data: Blob = new Blob([buffer], { type: this.excel_type });
+    FileSaver.saveAs(data, 'Inventario' + '_export_' + new Date().getTime() + this.excel_ext);
+    console.warn('Inventario Exportado a Excel');
   }
 
   // funcion para navegar entre las paginas con el angular router
