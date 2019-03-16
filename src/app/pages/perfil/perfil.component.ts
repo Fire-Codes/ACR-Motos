@@ -78,7 +78,7 @@ export class PerfilComponent implements OnInit {
             Contrasena: this.contrasena
           });
         }).catch(err => {
-          console.error(err);
+          // console.error(err);
         });
         // tslint:disable-next-line:max-line-length
         this.servicio.newToast(1, 'Contraseña Actualizada Correctamente', `La contraseña para el usuario ${this.servicio.auth.auth.currentUser.email} se ha actualizado correctamente!`);

@@ -125,7 +125,7 @@ export class ServicioService {
   public guardarComoExcel(buffer: any, fileName: string) {
     const data: Blob = new Blob([buffer], { type: this.excel_type });
     FileSaver.saveAs(data, 'Inventario' + '_export_' + new Date().getTime() + this.excel_ext);
-    console.warn('Inventario Exportado a Excel');
+    // console.warn('Inventario Exportado a Excel');
   }
 
   // funcion para navegar entre las paginas con el angular router
