@@ -1,0 +1,12 @@
+<div mat-dialog-title>
+  Inicio de Sesión Requerido
+</div>
+<div mat-dialog-content>
+  <mat-form-field style="width: 100%;">
+    <input type="password" matInput placeholder="Contraseña" name="contrasena" [(ngModel)]="contrasena">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Cancelar</button>
+  <button mat-button (click)="iniciar()" >Iniciar Sesión</button>
+</div>

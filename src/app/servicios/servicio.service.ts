@@ -49,8 +49,14 @@ export class ServicioService {
   // variable que contendra el arreglo de usuarios
   Usuarios: AngularFirestoreCollection<Usuario>;
 
+  // variable para aministrar los datos de un usuario especifico al momento del login
+  public usuarioAdministrar: Usuario = null;
+
   // variable que contendra a que tienda direccionar
   public tienda = 'Tienda Principal';
+
+  // variable que indicara el estado de loguin pra el dashboard
+  public logueado = false;
 
   // variable que contendra todos los meses del año
   public meses: string[] = [
@@ -97,6 +103,13 @@ export class ServicioService {
     });
     // console.warn(Usuarioss);
     return Usuarioss;
+  }
+
+  // funcion para extraer los datos del usuario activo
+  public extraerDatosUsuario(email: string): void {
+    this.fs.doc<Usuario>(`ACR Motos/Control/Usuarios/${email}`).snapshotChanges().subscribe(user => {
+      this.usuarioAdministrar = user.payload.data();
+    });
   }
 
   public exportarExcel(productos: Producto[], nombreArchivoExcel: string) {

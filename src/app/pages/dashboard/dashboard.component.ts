@@ -3,6 +3,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 // importacion del componente del NavSide
 import { NavsideComponent } from '../navside/navside.component';
 
+// importacion de componente de matdialog
+import { MatDialog } from '@angular/material';
+
+// se realiza la importacion del componente del matDialog
+import { IniciarDashboardModalComponent } from './../modales/iniciar-dashboard-modal/iniciar-dashboard-modal.component';
+
 // importacion del Chart.js
 import { Chart } from 'chart.js';
 
@@ -29,8 +35,14 @@ export class DashboardComponent implements OnInit {
   // variable que determina en que plataforma esta
   plataforma = '';
 
+  // variable que determina si el usuario actual es administrador o no
+  administrador = false;
+
   // variable que contendra el string de la fecha y hora
   fechaHora = '';
+
+  // variable que contendra si se debe loguear o no
+  public logueado = this.servicio.logueado;
 
   // variable que contendra todos los meses
   // tslint:disable-next-line:max-line-length
@@ -107,9 +119,16 @@ export class DashboardComponent implements OnInit {
     public nav: NavsideComponent,
     public servicio: ServicioService,
     public fs: AngularFirestore,
-    public db: AngularFireDatabase
+    public db: AngularFireDatabase,
+    public dialog: MatDialog
   ) {
-
+    if (this.servicio.usuarioAdministrar.Tipo === 'Administrador') {
+      this.administrador = true;
+    } else {
+      this.administrador = false;
+    }
+    this.servicio.logueado = false;
+    this.logueado = this.servicio.logueado;
     const tiempo = new Date();
 
     // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente para las ventas
@@ -119,9 +138,6 @@ export class DashboardComponent implements OnInit {
         this.datosVentasSemanaFirestore = semana.payload.data();
         this.datosVentasSemanaLocal = this.datosVentasSemanaFirestore;
         this.totalVentasSemana = semana.payload.data().TotalVentas;
-        setTimeout(() => {
-          this.generarGraficoVentasSemana();
-        }, 1000);
       });
 
     // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente para las ventas
@@ -130,9 +146,6 @@ export class DashboardComponent implements OnInit {
         this.datosVentasAnualFirestore = anuales.payload.data();
         this.datosVentasAnualesLocal = this.datosVentasAnualFirestore;
         this.totalVentasAnual = anuales.payload.data().TotalVentas;
-        setTimeout(() => {
-          this.generarGraficoVentasAnual();
-        }, 1000);
       });
 
     // se extraen los datos de firestore del dia actual para mostrar en los graficos diarios correctamente para las ventas
@@ -142,9 +155,6 @@ export class DashboardComponent implements OnInit {
         this.datosVentasDiarioFirestore = diario.payload.data();
         this.datosVentasDiarioLocal = this.datosVentasDiarioFirestore.Datos;
         this.totalVentasDia = diario.payload.data().TotalVentas;
-        setTimeout(() => {
-          this.generarGraficoVentasDiario();
-        }, 1000);
       });
 
     // se extraen los datos de firestore de la semana actual para mostrarlo en los graficos correctamente para las ganancias
@@ -154,9 +164,6 @@ export class DashboardComponent implements OnInit {
         this.datosGananciasSemanaFirestore = semana.payload.data();
         this.datosGananciasSemanaLocal = this.datosGananciasSemanaFirestore;
         this.totalGananciasSemana = semana.payload.data().TotalVentas;
-        setTimeout(() => {
-          this.generarGraficoGananciasSemana();
-        }, 1000);
       });
 
     // se extraen los datos de firestore del mes actual para mostrar en los graficos anuales correctamente para las ganancias
@@ -165,9 +172,6 @@ export class DashboardComponent implements OnInit {
         this.datosGananciasAnualFirestore = anuales.payload.data();
         this.datosGananciasAnualesLocal = this.datosGananciasAnualFirestore;
         this.totalGananciasAnual = anuales.payload.data().TotalVentas;
-        setTimeout(() => {
-          this.generarGraficoGananciasAnual();
-        }, 1000);
       });
 
     // se extraen los datos de firestore del dia actual para mostrar en los graficos diarios correctamente para las ganancias
@@ -177,9 +181,6 @@ export class DashboardComponent implements OnInit {
         this.datosGananciasDiarioFirestore = diario.payload.data();
         this.datosGananciasDiarioLocal = this.datosGananciasDiarioFirestore.Datos;
         this.totalGananciasDia = diario.payload.data().TotalVentas;
-        setTimeout(() => {
-          this.generarGraficoGananciasDiario();
-        }, 1000);
       });
 
 
@@ -240,164 +241,169 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    const tiempo = new Date();
+    if (this.administrador === false) {
 
-    // se realizan las tomas de decisiones y se suben los datos a firestore para el grafico semanal y su correcto funcionamiento
-    if (this.servicio.extraerNumeroSemana() === 52) {
-
-      // para las ventas
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
-        });
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana);
-        });
-
-      // para las ganancias
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
-        });
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana);
-        });
-    } else if (this.servicio.extraerNumeroSemana() === 53) {
-
-      // para las ventas
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
-        });
-
-      // para las ganancias
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
-        });
     } else {
+      this.logueado = false;
+      this.abrirDialogo();
+      const tiempo = new Date();
 
-      // para las ventas
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana);
-        });
+      // se realizan las tomas de decisiones y se suben los datos a firestore para el grafico semanal y su correcto funcionamiento
+      if (this.servicio.extraerNumeroSemana() === 52) {
 
-      // para las ganancias
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana);
-        });
-    }
-
-    // se actualizan los datos del año siguiente al actual para su mejor funcionamiento
-    // para las ventas
-    // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales)
-      .then(res => {
+        // para las ventas
         // tslint:disable-next-line:max-line-length
-        this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales);
-      });
-
-    // para las ganancias
-    // tslint:disable-next-line:max-line-length
-    this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales)
-      .then(res => {
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
+          });
         // tslint:disable-next-line:max-line-length
-        this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales);
-      });
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushVentasSemana);
+          });
 
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
+          });
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana53`).set(this.pushGananciasSemana);
+          });
+      } else if (this.servicio.extraerNumeroSemana() === 53) {
 
-    // se realizan las tomas de deciiones y se suben los datos a firestore para el grafico anual y su correcto funcionamiento
-    if ((tiempo.getMonth() === 11) && (tiempo.getDate() === 31)) {
+        // para las ventas
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushVentasSemana);
+          });
 
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno() + 1}/Datos/Semana1`).set(this.pushGananciasSemana);
+          });
+      } else {
+
+        // para las ventas
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushVentasSemana);
+          });
+
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Semanales/${this.servicio.extraerAno()}/Datos/Semana${this.servicio.extraerNumeroSemana() + 1}`).set(this.pushGananciasSemana);
+          });
+      }
+
+      // se actualizan los datos del año siguiente al actual para su mejor funcionamiento
       // para las ventas
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushVentasMensuales);
         });
 
       // para las ganancias
       // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias)
+      this.fs.doc<TipoProductos>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales)
         .then(res => {
           // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias);
+          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Anuales/${this.servicio.extraerAno() + 1}`).set(this.pushGananciasMensuales);
         });
 
-    } else if (((tiempo.getMonth() === 2) && (tiempo.getDate() === 28)) || ((tiempo.getMonth() === 2) && (tiempo.getDate() === 29))) {
 
-      // para las ventas
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
-        });
+      // se realizan las tomas de deciiones y se suben los datos a firestore para el grafico anual y su correcto funcionamiento
+      if ((tiempo.getMonth() === 11) && (tiempo.getDate() === 31)) {
 
-      // para las ganancias
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
-        });
-    } else if ((tiempo.getDate() === 30) || (tiempo.getDate() === 31)) {
+        // para las ventas
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushVentasDiarias);
+          });
 
-      // para las ventas
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
-        });
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno() + 1}/Datos/1-Enero-${tiempo.getFullYear() + 1}`).set(this.pushGananciasDiarias);
+          });
 
-      // para las ganancias
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
-        });
-    } else {
+      } else if (((tiempo.getMonth() === 2) && (tiempo.getDate() === 28)) || ((tiempo.getMonth() === 2) && (tiempo.getDate() === 29))) {
 
-      // para las ventas
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias);
-        });
+        // para las ventas
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
+          });
 
-      // para las ganancias
-      // tslint:disable-next-line:max-line-length
-      this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias)
-        .then(res => {
-          // tslint:disable-next-line:max-line-length
-          this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias);
-        });
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-Marzo-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
+          });
+      } else if ((tiempo.getDate() === 30) || (tiempo.getDate() === 31)) {
+
+        // para las ventas
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushVentasDiarias);
+          });
+
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/1-${this.meses[tiempo.getMonth() + 1]}-${tiempo.getFullYear()}`).set(this.pushGananciasDiarias);
+          });
+      } else {
+
+        // para las ventas
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ventas/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushVentasDiarias);
+          });
+
+        // para las ganancias
+        // tslint:disable-next-line:max-line-length
+        this.fs.doc<VentasDiarias>(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias)
+          .then(res => {
+            // tslint:disable-next-line:max-line-length
+            this.db.database.ref(`/ACR Motos/Control/Ganancias/${this.servicio.tienda}/Diarias/${this.servicio.extraerAno()}/Datos/${tiempo.getDate() + 1}-${this.servicio.meses[tiempo.getMonth()]}-${this.servicio.extraerAno()}`).set(this.pushGananciasDiarias);
+          });
+      }
     }
-
   }
 
   // funcion para extraer la fecha y la hora a cada segundo
@@ -412,6 +418,31 @@ export class DashboardComponent implements OnInit {
         this.fechaHora = `${this.diasSemana[fechaHora.getDay()]} ${fechaHora.getDate()} de ${this.meses[fechaHora.getMonth()]} del ${fechaHora.getFullYear()} | ${fechaHora.getHours() - 12}:${fechaHora.getMinutes()}:${fechaHora.getSeconds()} PM`;
       }
     }, 1000);
+  }
+
+  // funcion para abrir el materialDialog
+  abrirDialogo() {
+    const dialogRef = this.dialog.open(IniciarDashboardModalComponent, {
+      autoFocus: true,
+      hasBackdrop: true
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (this.servicio.logueado === false) {
+        this.servicio.navegar('inventario');
+      } else {
+        this.logueado = this.servicio.logueado;
+        dialogRef.close();
+        setTimeout(() => {
+          this.generarGraficoGananciasAnual();
+          this.generarGraficoGananciasDiario();
+          this.generarGraficoGananciasSemana();
+          this.generarGraficoVentasAnual();
+          this.generarGraficoVentasDiario();
+          this.generarGraficoVentasSemana();
+        }, 1000);
+      }
+      console.warn(res);
+    });
   }
 
   // funcion para generar el grafico de la semana actual para las ventas

@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
   login() {
     this.servicio.login(this.email, this.password)
       .then((usuario) => {
+        this.servicio.extraerDatosUsuario(this.email);
         this.fs.doc(`ACR Motos/Control/Usuarios/${this.servicio.auth.auth.currentUser.email}`).update({
           EstadoConexion: true,
           UID: this.servicio.auth.auth.currentUser.uid,

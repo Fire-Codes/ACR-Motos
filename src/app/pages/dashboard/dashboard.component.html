@@ -7,7 +7,7 @@
   </div>
 </nav>
 
-<body>
+<body *ngIf="logueado && administrador">
   <mat-tab-group mat-stretch-tabs>
     <mat-tab label="Ventas">
       <div class="container pt-4">
@@ -190,3 +190,11 @@
     </mat-tab>
   </mat-tab-group>
 </body>
+
+<div *ngIf="!administrador" class="jumbotron">
+  <div class="display-4">
+    <div class="text-center">
+      Usted no tiene privilegios de Administrador
+    </div>
+  </div>
+</div>
