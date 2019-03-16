@@ -66,6 +66,8 @@ import { TablaHistorialFacturasComponent } from './pages/tablas/tabla-historial-
 import { ImprimirServicioModalComponent } from './pages/modales/imprimir-servicio-modal/imprimir-servicio-modal.component';
 import { ImprimirServicioComponent } from './pages/impresiones/imprimir-servicio/imprimir-servicio.component';
 import { IniciarDashboardModalComponent } from './pages/modales/iniciar-dashboard-modal/iniciar-dashboard-modal.component';
+import { HistorialServiciosComponent } from './pages/historial-servicios/historial-servicios.component';
+import { TablaHistorialServiciosComponent } from './pages/tablas/tabla-historial-servicios/tabla-historial-servicios.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +106,9 @@ import { IniciarDashboardModalComponent } from './pages/modales/iniciar-dashboar
     TablaHistorialFacturasComponent,
     ImprimirServicioModalComponent,
     ImprimirServicioComponent,
-    IniciarDashboardModalComponent
+    IniciarDashboardModalComponent,
+    HistorialServiciosComponent,
+    TablaHistorialServiciosComponent
   ],
   imports: [
     BrowserModule,

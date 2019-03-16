@@ -1,3 +1,4 @@
+import { ServicioService } from 'src/app/servicios/servicio.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
@@ -54,7 +55,8 @@ export class ServiciosComponent implements OnInit {
   ];
   constructor(
     public ngbModal: NgbModal,
-    public nav: NavsideComponent
+    public nav: NavsideComponent,
+    public servicio: ServicioService
   ) {
     this.nav.mostrarNav = true;
   }
@@ -65,5 +67,10 @@ export class ServiciosComponent implements OnInit {
   // funcion para abrir los modales de manera centrada
   mostrarModal(content: string) {
     this.ngbModal.open(content, { centered: true });
+  }
+
+  // funcion para ver el historial de los servicios
+  verHistorialServicios() {
+    this.servicio.navegar('historialServicio');
   }
 }

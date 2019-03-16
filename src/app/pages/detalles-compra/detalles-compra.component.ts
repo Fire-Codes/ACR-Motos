@@ -1,3 +1,4 @@
+import { Cliente } from './../../interfaces/cliente';
 import { Component, OnInit } from '@angular/core';
 
 
@@ -10,6 +11,8 @@ import { ServicioService } from 'src/app/servicios/servicio.service';
   styleUrls: ['./detalles-compra.component.scss']
 })
 export class DetallesCompraComponent implements OnInit {
+
+  cliente: Cliente = this.servicio.ClienteVerCompras;
 
   constructor(
     public servicio: ServicioService

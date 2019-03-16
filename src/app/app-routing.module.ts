@@ -23,6 +23,7 @@ import { DetallesCompraComponent } from './pages/detalles-compra/detalles-compra
 import { PedidosComponent } from './pages/pedidos/pedidos.component';
 import { HistorialFacturasComponent } from './pages/historial-facturas/historial-facturas.component';
 import { ImprimirServicioComponent } from './pages/impresiones/imprimir-servicio/imprimir-servicio.component';
+import { HistorialServiciosComponent } from './pages/historial-servicios/historial-servicios.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -46,6 +47,7 @@ const routes: Routes = [
   { path: 'pedidos', component: PedidosComponent },
   { path: 'historialFacturas', component: HistorialFacturasComponent },
   { path: 'imprimirServicio', component: ImprimirServicioComponent },
+  { path: 'historialServicio', component: HistorialServiciosComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 
