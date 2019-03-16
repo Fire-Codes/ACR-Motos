@@ -8,11 +8,12 @@
   <div class="container pt-4">
     <div class="mb-4 slideInLeft">
       <div class="container-fluid bg-info rounded-top p-4">
+        <div class="float-right">
+          <button (click)='exportarExcel()' class="elevated text-center" matTooltip="Exportar Inventario a Excel"
+            mat-fab><i matListIcon class="fas fa-file-csv text-dark"></i>
+          </button>
+        </div>
         <mat-card-title>Mostrar Pedidos menores a:</mat-card-title>
-        <!--<mat-form-field class="ml-4" *ngIf="hayDatos">
-          <input matInput color="warn" (keyup)="applyFilter()" name="valorBusqueda" [(ngModel)]="valorBusqueda"
-            placeholder="Buscar Producto">
-        </mat-form-field>-->
         <mat-form-field class="ml-4">
           <mat-select placeholder="Seleccionar Cantidad" (selectionChange)="applyFilter()" [(ngModel)]="valorBusqueda">
             <mat-option value="3">3</mat-option>

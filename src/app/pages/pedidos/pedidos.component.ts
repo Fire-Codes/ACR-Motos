@@ -68,4 +68,9 @@ export class PedidosComponent implements OnInit {
     });
   }
 
+  // funcion pra exportar a excel
+  exportarExcel() {
+    this.servicio.exportarExcel(this.dataSource.data, 'Pedidos');
+  }
+
 }
