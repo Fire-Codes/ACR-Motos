@@ -1,4 +1,199 @@
-<div class="invoice-box">
+<body>
+  <div class="bg-transparent row mt-5">
+    <div class="bg-transparent col-sm-12 col-md-12 col-lg-12">
+      <div class="text-center text-darkBlue">
+        <div class="bg-transparent display-3">
+          <b>ACR Motos</b>
+        </div>
+        <h6>
+          Dirección: Cruz Roja 20 mts. al Norte<br>
+          Email: acrmotosnic@gmail.com<br>
+          Tel: 23468367<br>
+        </h6>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="float-left text-darkBlue">
+        <h3>RUC: 0842006960000W</h3>
+      </div>
+      <div class="float-right text-danger">
+        <h3>N° {{facturaImprimir.NumeroFactura}}</h3>
+        <!--{{facturaImprimir.NumeroFactura}}-->
+      </div>
+    </div>
+  </div>
+  <div class="row mt-1">
+    <div class="col-sm-6 col-md-6 col-lg-6">
+      <div class="card border-darkBlue mb-1 rounded-lg" style="width: 100%; height: 12rem;">
+        <div class="card-body text-darkBlue">
+          <h4>
+            Cliente: {{facturaImprimir.Cliente.NombreCompleto}}<br>
+            Dirección: {{facturaImprimir.Cliente.Direccion}}<br>
+            Teléfono: {{facturaImprimir.Cliente.Telefono}}
+          </h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+      <div class="card border-darkBlue mb-1 rounded-lg" style="width: 100%; height: 12rem;">
+        <div class="card-body text-darkBlue">
+          <h4>
+            Fecha: {{facturaImprimir.Fecha}}<br>
+            Vendedor: {{facturaImprimir.Vendedor.Nombres}} {{facturaImprimir.Vendedor.Apellidos}}<br>
+            Vencimiento: {{facturaImprimir.Fecha}}
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="border border-darkBlue rounded rounded-lg bg-transparent" style="height: 50vh; width: 100%;">
+    <div class="container-fluid bg-darkBlue">
+      <mat-card-title>
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="text-center text-white">
+              <h4>DESCRIPCION</h4>
+            </div>
+          </div>
+          <div class="col-sm-2 col-md-2 col-lg-2">
+            <div class="text-center text-white">
+              <h4>CANT</h4>
+            </div>
+          </div>
+          <div class="col-sm-2 col-md-2 col-lg-2">
+            <div class="text-center text-white">
+              <h4>P/UNITARIO</h4>
+            </div>
+          </div>
+          <div class="col-sm-2 col-md-2 col-lg-2">
+            <div class="text-center text-white">
+              <h4>TOTAL</h4>
+            </div>
+          </div>
+        </div>
+      </mat-card-title>
+    </div>
+    <div class="d-flex align-items-center justify-content-center">
+      <img
+        src="https://firebasestorage.googleapis.com/v0/b/acr-motos.appspot.com/o/Logotipo.png?alt=media&token=fdd841c3-4197-4e37-918c-0d0e86863e5e"
+        alt="Marca de Agua" style="font-size: 15em; z-index: 9998; opacity: 0.1; width: 50%; position: fixed;">
+    </div>
+    <div class="row" *ngFor="let producto of facturaImprimir.Productos">
+      <div class="col-sm-6 col-md-6 col-lg-6">
+        <div class="text-dark">
+          {{producto.Producto}} {{producto.Marca}} {{producto.Modelo}}
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="text-center text-black">
+          {{producto.Cantidad}}
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="text-center text-black">
+          {{producto.Precio}}
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="text-center text-black">
+          {{producto.Precio * producto.Cantidad}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3 col-md-3 col-lg-3">
+      <div class="card border-darkBlue mb-3" style="width: 100%; height: 8rem;">
+        <div class="card-header">
+          <div class="text-center text-darkBlue">
+            <h5>Autorizado Por</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3">
+      <div class="card border-darkBlue mb-3" style="width: 100%; height: 8rem;">
+        <div class="card-header">
+          <div class="text-center text-darkBlue">
+            <h5>Vendedor</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3">
+      <div class="card border-darkBlue mb-3" style="width: 100%; height: 8rem;">
+        <div class="card-header">
+          <div class="text-center text-darkBlue">
+            <h5>Recibí Conforme</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3">
+      <div class="border border-darkBlue rounded rounded-lg card mt-1" style="width: 100%; height: 8rem;">
+        <div class="row" style="z-index: 9999">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="bg-darkBlue text-white ">
+              <h5>Sub Total</h5>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class=" text-dark">
+              <h5>
+                C$ {{totalSinDescuento()}}
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="bg-darkBlue text-white ">
+              <h6>DESCUENTO</h6>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class=" text-dark">
+              <h5>
+                C$ {{facturaImprimir.Descuento}}
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="bg-darkBlue text-white ">
+              <h4>Interés</h4>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class=" text-dark">
+              <h5>C$ {{facturaImprimir.Interes}}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="bg-darkBlue text-white ">
+              <h5>TOTAL</h5>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class=" text-dark">
+              <h5>C$ {{(totalSinDescuento() - facturaImprimir.Descuento) + facturaImprimir.Interes}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+
+
+
+
+
+<!--<div class="invoice-box">
   <table cellpadding="0" cellspacing="0">
     <tr class="top">
       <td colspan="2">
@@ -121,7 +316,7 @@
       </td>
     </tr>
   </table>
-</div>
+</div>-->
 <div class="float-right">
   <button (click)="navegar()" class="btn btn-primary m-3" id="btnRegresar">Regresar</button>
   <button (click)="imprimir()" class="btn btn-warning m-3" id="btnImprimir">Imprimir</button>

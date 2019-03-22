@@ -36,6 +36,7 @@ export class ImprimirFacturaComponent implements OnInit {
   imprimir() {
     const btnRegresar = document.getElementById('btnRegresar');
     const btnImprimir = document.getElementById('btnImprimir');
+    // const contenido = document.getElementById('contenido').style.overflow = 'none';
     btnRegresar.hidden = true;
     btnImprimir.hidden = true;
     window.print();
