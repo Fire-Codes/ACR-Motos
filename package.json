@@ -1,6 +1,6 @@
 {
   "name": "acrmotos",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "main.js",
   "productName": "ACR Motos",
   "description": "Sistema de Inventario para la empresa ACR Motos",
