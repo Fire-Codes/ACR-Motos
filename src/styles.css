@@ -1,16 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 .elevated {
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
+
 body {
   background-color: #e5e9ed;
   margin: 0;
   min-height: 100vh;
+  overflow-y: none;
 }
-#toast-container > div {
+
+#toast-container>div {
   opacity: 1;
 }
+
 .cdk-overlay-container {
   z-index: 2000;
 }
@@ -22,4 +27,12 @@ body {
 .bg-darkBlue {
   background-color: #002171;
   color: #ffffff;
+}
+
+html {
+  overflow-y: none;
+}
+
+* {
+  overflow-y: none;
 }
