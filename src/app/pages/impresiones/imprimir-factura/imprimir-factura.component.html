@@ -6,7 +6,7 @@
           <b>ACR Motos</b>
         </div>
         <h6>
-          Cruz Roja 20 mts. al Norte
+          Dirección: Cruz Roja 20 mts. al Norte<br>
           Email: acrmotosnic@gmail.com<br>
           Tel: 23468367<br>
         </h6>
@@ -17,7 +17,7 @@
         <h3>RUC: 0842006960000W</h3>
       </div>
       <div class="float-right text-danger">
-        <h3>N° 1</h3>
+        <h3>N° {{facturaImprimir.NumeroFactura}}</h3>
         <!--{{facturaImprimir.NumeroFactura}}-->
       </div>
     </div>
@@ -27,9 +27,9 @@
       <div class="card border-darkBlue mb-1 rounded-lg" style="width: 100%; height: 12rem;">
         <div class="card-body text-darkBlue">
           <h4>
-            Cliente: Edycar Jesus Reyes Jimenez<br>
-            Dirección: Gas. UNO San Martin 1/2 C. al Sur<br>
-            Teléfono: 85601622
+            Cliente: {{facturaImprimir.Cliente.NombreCompleto}}<br>
+            Dirección: {{facturaImprimir.Cliente.Direccion}}<br>
+            Teléfono: {{facturaImprimir.Cliente.Telefono}}
           </h4>
         </div>
       </div>
@@ -38,9 +38,9 @@
       <div class="card border-darkBlue mb-1 rounded-lg" style="width: 100%; height: 12rem;">
         <div class="card-body text-darkBlue">
           <h4>
-            Fecha: 21/03/2019<br>
-            Vendedor: Edycar Jesús Reyes Jimenez<br>
-            Vencimiento: 21/03/2019
+            Fecha: {{facturaImprimir.Fecha}}<br>
+            Vendedor: {{facturaImprimir.Vendedor.Nombres}} {{facturaImprimir.Vendedor.Apellidos}}<br>
+            Vencimiento: {{facturaImprimir.Fecha}}
           </h4>
         </div>
       </div>
@@ -77,6 +77,28 @@
       <img
         src="https://firebasestorage.googleapis.com/v0/b/acr-motos.appspot.com/o/Logotipo.png?alt=media&token=fdd841c3-4197-4e37-918c-0d0e86863e5e"
         alt="Marca de Agua" style="font-size: 15em; z-index: 9998; opacity: 0.1; width: 50%; position: fixed;">
+    </div>
+    <div class="row" *ngFor="let producto of facturaImprimir.Productos">
+      <div class="col-sm-6 col-md-6 col-lg-6">
+        <div class="text-dark">
+          {{producto.Producto}} {{producto.Marca}} {{producto.Modelo}}
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="text-center text-black">
+          {{producto.Cantidad}}
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="text-center text-black">
+          {{producto.Precio}}
+        </div>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="text-center text-black">
+          {{producto.Precio * producto.Cantidad}}
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -117,7 +139,9 @@
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class=" text-dark">
-              <h5>C$ 1821.34</h5>
+              <h5>
+                C$ {{totalSinDescuento()}}
+              </h5>
             </div>
           </div>
         </div>
@@ -129,19 +153,21 @@
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class=" text-dark">
-              <h5>C$ 0.00</h5>
+              <h5>
+                C$ {{facturaImprimir.Descuento}}
+              </h5>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="bg-darkBlue text-white ">
-              <h5>IVA</h5>
+              <h4>Interés</h4>
             </div>
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class=" text-dark">
-              <h5>C$ 0.00</h5>
+              <h5>C$ {{facturaImprimir.Interes}}</h5>
             </div>
           </div>
         </div>
@@ -153,7 +179,7 @@
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class=" text-dark">
-              <h5>C$ 1821.34</h5>
+              <h5>C$ {{(totalSinDescuento() - facturaImprimir.Descuento) + facturaImprimir.Interes}}</h5>
             </div>
           </div>
         </div>
