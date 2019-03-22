@@ -75,13 +75,15 @@
           <tr>
             <td>
               <mat-form-field>
-                <input type="number" placeholder="Precio de Compra" matInput required [(ngModel)]="PCompra"
-                  name="PCompra">
+                <input type="number" placeholder="Precio de Venta" matInput required [(ngModel)]="PVenta" name="PVenta"
+                  (keyup)="calcularPrecioCompra()">
               </mat-form-field>
+
             </td>
             <td>
               <mat-form-field>
-                <input type="number" placeholder="Precio de Venta" matInput required [(ngModel)]="PVenta" name="PVenta">
+                <input type="number" placeholder="Precio de Compra" matInput required [(ngModel)]="PCompra"
+                  name="PCompra">
               </mat-form-field>
             </td>
           </tr>
@@ -404,8 +406,8 @@
           <button (click)='openVerticallyCentered(agregarProducto,producto)' class="elevated text-center bg-info mr-3"
             matTooltip="Agregar Producto" mat-fab><i matListIcon class="fas fa-plus text-dark"></i>
           </button>
-          <button (click)="exportarExcel()" class="elevated text-center bg-info"
-            matTooltip="Exporta Inventario a Excel" mat-fab *ngIf="hayDatos">
+          <button (click)="exportarExcel()" class="elevated text-center bg-info" matTooltip="Exporta Inventario a Excel"
+            mat-fab *ngIf="hayDatos">
             <mat-icon>poll</mat-icon>
           </button>
         </div>

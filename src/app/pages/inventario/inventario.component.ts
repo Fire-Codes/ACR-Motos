@@ -206,6 +206,12 @@ export class InventarioComponent implements OnInit {
     }
   }
 
+  // funcion para calcular el precio de compra
+  calcularPrecioCompra() {
+    this.PCompra = 0;
+    this.PCompra = this.PVenta * 0.60;
+  }
+
   // funcion para editar los datos de un producto
   editarProductos() {
     this.fs.doc(`ACR Motos/Control/Inventario/${this.servicio.tienda}/Productos/${this.producto.Id}`).update(this.producto)
